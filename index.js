@@ -1,5 +1,5 @@
-var Client = require('./exchange/Client.js'),
-	Order  = require('./exchange/model/Order.js');
+var Client = require('./lib/Client.js'),
+	Order  = require('./lib/model/Order.js');
 
 var model = {
 	'Order': Order
@@ -8,4 +8,4 @@ var model = {
 module.exports = {
 	'Client': Client,
 	'model': model
-}
+};
