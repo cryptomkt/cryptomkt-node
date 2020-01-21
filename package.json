@@ -1,5 +1,5 @@
 {
-  "name": "cryptomkt",
+  "name": "cryptomarket",
   "version": "1.0.0",
   "description": "The CryptoMarket for Node.js",
   "main": "index.js",
