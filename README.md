@@ -111,4 +111,14 @@ socket.on('ticker', (data) => {
 socket.on('balances', (data) => {
     console.log('balances', data);
 });
+
+// open user orders info
+socket.on('open-orders', (data) => {
+    console.log('open-orders', data);
+});
+
+// historical user orders info
+socket.on('historical-orders', (data) => {
+    console.log('historical-orders', data);
+});
 ```
