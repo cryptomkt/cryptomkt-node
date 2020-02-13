@@ -40,6 +40,26 @@ client.getMarkets()
         console.error(err);
     })
 ```
+**Obtain Book**
+```javascript
+//receives a Js dictionary ("market" and "side" are mandatory).
+client.getBook(dictionary, (err, output) => {
+   if(err){
+   console.log('error');
+   }
+   console.log(output);
+});
+```
+**Obtain ticker info**
+```javascript
+//receives an object that contains the market (ex: {"market":"XLMARS"})
+client.getTicker(market, (err, output) => {
+   if(err){
+   console.log('error');
+   }
+   console.log(output);
+});
+```
 
 ### Authenticated endpoints
 
@@ -56,6 +76,99 @@ client.getAccount()
         console.error(err);
     })
 ```
+**Create an order**
+```javascript
+//receives a Js dictionary ("market","type","side" and "amount" are mandatory).
+client.createOrder(order, (err, output) => {
+   if(err){
+   console.log('error´);
+   }
+   console.log(output);
+});
+```
+**Create multiple orders**
+```javascript
+//receives dictionary array that contains multiple orders ("market","type","side" and "amount" are mandatory).
+client.createMultiOrders(orders, (err, output) => {
+   if(err){
+   console.log('error´);
+   }
+   console.log(output);
+});
+```
+**Obtain active orders**
+```javascript
+//receives an object that contains the market (ex: {"market":"XLMCLP"})
+client.getActiveOrders(market, (err, output) => {
+   if(err){
+   console.log('error');
+   }
+   console.log(output);
+});
+```
+**Cancel an order**
+```javascript
+//receives object that contains the order's ID (ex: {"id":"O000004"}).
+client.cancelOrder(order, (err, output) => {
+   if(err){
+   console.log('error');
+   }
+   console.log(output);
+});
+```
+**Cancel multiple orders**
+```javascript
+//receives dictionary array that contains multiple order's IDs (ex: [{"id":"O000001"},{"id":"O000002"},...]).
+client.cancelMultiOrders(orders, (err, output) => {
+   if(err){
+   console.log('error');
+   }
+   console.log(output);
+});
+```
+**Make a transfer**
+```javascript
+//receives a Js dictionary ("currency", "address", and "amount" are mandatory).
+client.transfer(transfer, (err, output) => {
+   if(err){
+   console.log('error');
+   }
+   console.log(output);
+});
+```
+
+**Obtain executed orders**
+```javascript
+//receives an object that contains the market (ex: {"market":"BTCCLP"})
+client.getExecutedOrders(market, (err, output) => {
+   if(err){
+   console.log('error');
+   }
+   console.log(output);
+});
+```
+**Obtain order status**
+```javascript
+//receives an object that contains the ID (ex: {"id":"O000005"})
+client.getOrderStatus(id, (err, output) => {
+   if(err){
+   console.log('error');
+   }
+   console.log(output);
+});
+```
+**Obtain account's balance**
+```javascript
+client.getBalance((err, output) => {
+    if(err){
+        console.log('error');
+        return
+    }
+    console.log(output);
+});
+
+```
+
 
 ## Using socket
 
@@ -120,5 +233,10 @@ socket.on('open-orders', (data) => {
 // historical user orders info
 socket.on('historical-orders', (data) => {
     console.log('historical-orders', data);
+});
+
+// user's operated volume
+socket.on('operated', (data) => {
+    console.log('operated', data);
 });
 ```
