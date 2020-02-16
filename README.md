@@ -157,7 +157,7 @@ client.getOrderStatus(id, (err, output) => {
    console.log(output);
 });
 ```
-**Obtain account's balance**
+**Obtain account balance**
 ```javascript
 client.getBalance((err, output) => {
     if(err){
