@@ -24,7 +24,58 @@ With a `client instance`, you can now make API calls. We've included some exampl
 
 ### Public endpoints
 
-Client methods returns Promises(ECMAScript 2015), these can be used with an Async function (ECMAScript 2017).
+**Using the functions**
+Client functions returns Promises(ECMAScript 2015), these functions can be called by three different ways: Then method, Await operator or a Callback function.
+
+***Example***
+```javascript
+async function example(){
+
+    // Method 1: standard promise (Then)
+    client.getMarkets()
+    .then((obj) => {
+        const data = obj.data;
+        console.log(data);
+    }).catch((err) => {
+        console.error(err);
+    })
+
+    // Method 2: Await promise
+    try {
+        let result = await client.getMarkets();
+        console.log(result);
+    } catch (e){
+        console.error(err);
+    }
+
+    // Method 3: Callback
+    client.getMarkets(function(error, result){
+        if(error){
+            console.error(err);
+            return;
+        }
+        console.log(result);
+    })
+}
+
+example();
+```
+***Expected output***
+```javascript
+//Any of the 3 ways to call the function should return an output like this
+response: {
+    status: 'success',
+    data: [
+      'ETHCLP', 'ETHARS', 'ETHEUR',
+      'ETHBRL', 'ETHMXN', 'XLMCLP',
+      'XLMARS', 'XLMEUR', 'XLMBRL',
+      'XLMMXN', 'BTCCLP', 'BTCARS',
+      'BTCEUR', 'BTCBRL', 'BTCMXN',
+      'EOSCLP', 'EOSARS', 'EOSEUR',
+      'EOSBRL', 'EOSMXN'
+    ]
+  }
+````
 
 **Listing available markets**
 
