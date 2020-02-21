@@ -25,9 +25,7 @@ With a `client instance`, you can now make API calls. We've included some exampl
 ### Public endpoints
 
 **Using the functions**
-Client functions returns Promises(ECMAScript 2015), these functions can be called by three different ways: Then method, Await operator or a Callback function.
 
-***Example***
 ```javascript
 async function example(){
 
@@ -78,7 +76,6 @@ response: {
 ````
 
 **Listing available markets**
-
 ```javascript
 var { Client } = require('cryptomarket');
 var client   = new Client({'apiKey': mykey, 'apiSecret': mysecret});
