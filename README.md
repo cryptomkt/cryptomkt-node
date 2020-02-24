@@ -83,9 +83,7 @@ var client   = new Client({'apiKey': mykey, 'apiSecret': mysecret});
 client.getMarkets()
     .then((obj) => {
         const data = obj.data;
-        data.forEach((market) => {
-			console.log(data);
-		});
+			  console.log(data);
     }).catch((err) => {
         console.error(err);
     })
