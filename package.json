@@ -1,10 +1,10 @@
 {
 	"name": "cryptomarket",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "The CryptoMarket for Node.js",
 	"homepage": "https://www.cryptomkt.com",
 	"main": "./index.js",
-	"author": "Pedro Bustamante <ppbb15@gmail.com>",
+	"author": "Pedro Bustamante",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
