@@ -31,7 +31,7 @@
     - [Receive balance info](#Receive-balance-info)
     - [Receive user orders info](#Receive-user-orders-info)
     - [Receive historical user orders info](#Receive-historical-user-orders-info)
-    - [Receive User´s operated volume](#Receive-User´s-operated-volume)
+    - [Receive User´s operated volume](#Receive-Users-operated-volume)
 
 
 ## Installation
@@ -568,6 +568,7 @@ client.socket.connect()
 
 var socket= await client.socket.connect();
 ```
+[(top &uarr;)](#cryptomkt-node)
 
 ### Receive socket events
 
