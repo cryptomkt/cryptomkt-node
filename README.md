@@ -84,7 +84,7 @@ var client   = new Client({'apiKey': mykey, 'apiSecret': mysecret});
 client.getMarkets()
     .then((obj) => {
         const data = obj.data;
-			  console.log(data);
+        console.log(data);
     }).catch((err) => {
         console.error(err);
     })
@@ -145,7 +145,7 @@ client.getBook(object, (err, output) => {
       timestamp: '2020-02-21T04:32:26.686000'
     }
     ...    
-   	]
+    ]
 ```
 
 **Obtain ticker info**
@@ -281,10 +281,10 @@ client.createMultiOrders(object, (err, output) => {
 ***Expected output***
 ```javascript
 response: {
-	status: 'success',
-	data: {
-	created: [{Order1},{Order2},...],
-	not_created: [] 
+  status: 'success',
+  data: {
+  created: [{Order1},{Order2},...],
+  not_created: [] 
     }
   }
 ```
@@ -704,7 +704,7 @@ ticker {
 }
 ```
 
-**Receive balance info**
+**Receive Your Balance info**
 ```javascript
 socket.on('balance', (data) => {
     console.log('balance', data);
@@ -729,7 +729,7 @@ balance {
 ```
 
 
-**Receive user orders info**
+**Receive Your Orders info**
 ```javascript
 socket.on('open-orders', (data) => {
     console.log('open-orders', data);
@@ -758,7 +758,7 @@ open-orders [
 ]
 ```
 
-**Receive historical user orders info**
+**Receive Your Historical orders info**
 ```javascript
 socket.on('historical-orders', (data) => {
     console.log('historical-orders', data);
@@ -804,7 +804,7 @@ historical-orders [
   ]
 ```
 
-**Receive User´s operated volume**
+**Receive Your operated volume**
 ```javascript
 socket.on('operated', (data) => {
     console.log('operated', data);
