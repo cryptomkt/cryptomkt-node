@@ -96,7 +96,8 @@ example();
 ```
 ##### Expected output
 ```javascript
-//Any of the 3 ways to call the function should return an output like this
+//  Any of the 3 ways to call the function should return an output like this:
+
 response: {
     status: 'success',
     data: [
@@ -120,9 +121,7 @@ var client   = new Client({'apiKey': mykey, 'apiSecret': mysecret});
 client.getMarkets()
     .then((obj) => {
         const data = obj.data;
-        data.forEach((market) => {
-			console.log(data);
-		});
+        console.log(data);
     }).catch((err) => {
         console.error(err);
     })
@@ -144,8 +143,10 @@ client.getMarkets()
 
 #### Obtain Book
 ```javascript
-//receives a Js object. "market" and "side" are mandatory (ex: {"market": "XLMCLP","side":"sell"}).
-client.getBook(dictionary, (err, output) => {
+//  Receives a Js object. "market" and "side" are mandatory. 
+//  Example: {"market": "XLMCLP", "side": "sell"}
+
+client.getBook(object, (err, output) => {
    if(err){
    console.log('error');
    }
@@ -182,14 +183,17 @@ client.getBook(dictionary, (err, output) => {
       timestamp: '2020-02-21T04:32:26.686000'
     }
     ...    
-   	]
+    ]
 ```
 [(top &uarr;)](#cryptomkt-node)
 
 #### Obtain ticker info
+
 ```javascript
-//receives a Js object that contains the market. (ex: {"market":"XLMARS"})
-client.getTicker(market, (err, output) => {
+//  Receives a Js object that contains the market.
+//  Example: {"market": "XLMARS"}
+
+client.getTicker(object, (err, output) => {
    if(err){
    console.log('error');
    }
@@ -268,9 +272,15 @@ client.getAccount()
 [(top &uarr;)](#cryptomkt-node)
 
 #### Create an order
+
 ```javascript
-//receives a Js object. "market","type","side" and "amount" are mandatory. (ex: {"amount": 1, "market": "XLMCLP", "price": 50.5, "type": "limit", "side": "sell"}).
-client.createOrder(order, (err, output) => {
+//  Receives a Js object. "market", "type", "side" and "amount" are mandatory.
+//  (Example: {"amount": 1, "market": "XLMCLP", "price": 50.5, "type": "limit", "side": "sell"}
+//  Note that "side" can be either "sell" or "buy", also "type" can be "limit", "stop-limit" or "market". 
+//  If you want to execute an "stop-limit" order you need to specify the "limit" amount.
+//  Example: {"amount": 1, "market": "XLMCLP", "price": 50.5, "type": "stop-limit", "limit": 50, "side": "sell"}
+
+client.createOrder(object, (err, output) => {
    if(err){
    console.log('error');
    }
@@ -302,8 +312,10 @@ response: {
 
 #### Create multiple orders
 ```javascript
-//receives object array that contains multiple orders. "market","type","side" and "amount" are mandatory. (ex: [{"amount": 1, "market": "XLMCLP", "price": 50.5, "type": "limit", "side": "sell"},{Order2},...]).
-client.createMultiOrders(orders, (err, output) => {
+//  Receives object array that contains multiple orders. "market", "type", "side" and "amount" are mandatory.
+//  Example: [{"amount": 1, "market": "XLMCLP", "price": 50.5, "type": "limit", "side": "sell"}, {Order2},...]
+
+client.createMultiOrders(object, (err, output) => {
    if(err){
    console.log('error');
    }
@@ -313,10 +325,10 @@ client.createMultiOrders(orders, (err, output) => {
 ##### Expected output
 ```javascript
 response: {
-	status: 'success',
-	data: {
-	created: [{Order1},{Order2},...],
-	not_created: [] 
+  status: 'success',
+  data: {
+  created: [{Order1},{Order2},...],
+  not_created: [] 
     }
   }
 ```
@@ -324,8 +336,10 @@ response: {
 
 #### Obtain active orders
 ```javascript
-//receives a Js object that contains the market (ex: {"market":"XLMCLP"})
-client.getActiveOrders(market, (err, output) => {
+//  Receives a Js object that contains the market
+//  Example: {"market":"XLMCLP"}
+
+client.getActiveOrders(object, (err, output) => {
    if(err){
    console.log('error');
    }
@@ -376,8 +390,10 @@ client.getActiveOrders(market, (err, output) => {
 
 #### Cancel an order
 ```javascript
-//receives object that contains the order's ID (ex: {"id":"O000004"}).
-client.cancelOrder(order, (err, output) => {
+//  Receives object that contains the order's ID.
+//  Example: {"id":"O000004"}
+
+client.cancelOrder(object, (err, output) => {
    if(err){
    console.log('error');
    }
@@ -407,9 +423,12 @@ response: {
 [(top &uarr;)](#cryptomkt-node)
 
 #### Cancel multiple orders
+
 ```javascript
-//receives object array that contains multiple order's IDs (ex: [{"id":"O000001"},{"id":"O000002"},...]).
-client.cancelMultiOrders(orders, (err, output) => {
+//  Receives object array that contains multiple order's IDs. 
+//  Example: [{"id":"O000001"},{"id":"O000002"},...]
+
+client.cancelMultiOrders(object, (err, output) => {
    if(err){
    console.log('error');
    }
@@ -420,20 +439,23 @@ client.cancelMultiOrders(orders, (err, output) => {
 ```javascript
 response: {
 status: 'success',
-data: { canceled: [{Order1},{Order2},...], not_canceled: [] } }
+data: { canceled: [{Order1},{Order2},...], not_canceled: [] }
+}
 ```
 [(top &uarr;)](#cryptomkt-node)
 
 #### Make a transfer
+
 ```javascript
-//receives a Js object. "currency", "address", and "amount" are mandatory. (ex: {"currency":'ETH',"address":'0xf2ec...',"amount":0.02}).
-client.transfer(transfer, (err, output) => {
+//  Receives a Js object. "currency", "address", and "amount" are mandatory.
+//  Example: {"currency": "ETH", "address": "0xf2ec...", "amount": 0.02}
+
+client.transfer(object, (err, output) => {
    if(err){
    console.log('error');
    }
    console.log(output);
 });
-
 ```
 ##### Expected output
 ```javascript
@@ -443,8 +465,10 @@ client.transfer(transfer, (err, output) => {
 
 #### Obtain executed orders
 ```javascript
-//receives a Js object that contains the market (ex: {"market":"XLMCLP"})
-client.getExecutedOrders(market, (err, output) => {
+//  Receives a Js object that contains the market.
+//  Example: {"market":"XLMCLP"}
+
+client.getExecutedOrders(object, (err, output) => {
    if(err){
    console.log('error');
    }
@@ -486,8 +510,10 @@ client.getExecutedOrders(market, (err, output) => {
 
 #### Obtain order status
 ```javascript
-//receives a Js object that contains the ID (ex: {"id":"O000005"})
-client.getOrderStatus(id, (err, output) => {
+//  Receives a Js object that contains the ID.
+//  Example: {"id":"O000005"}
+
+client.getOrderStatus(object, (err, output) => {
    if(err){
    console.log('error');
    }
@@ -528,6 +554,7 @@ client.getBalance((err, output) => {
 });
 ```
 ##### Expected output
+
 ```javascript
 {
    "status": "success",
@@ -550,6 +577,8 @@ client.getBalance((err, output) => {
 
 ## Using socket
 
+Cryptomarket's API v2 integrates Socket.IO! You can now receive real-time events connecting to the sockets.
+
 ### Get socket instance
 
 ```javascript
@@ -557,6 +586,7 @@ var { Client } = require('cryptomarket');
 var client = new Client({'apiKey': mykey, 'apiSecret': mysecret});
 
 var socket;
+
 client.socket.connect()
     .then((skt) => {
         socket = skt
@@ -566,7 +596,7 @@ client.socket.connect()
 
 //or
 
-var socket= await client.socket.connect();
+var socket = await client.socket.connect();
 ```
 [(top &uarr;)](#cryptomkt-node)
 
@@ -584,7 +614,8 @@ socket.unsubscribe('ETHCLP');
 
 #### Receive open book info
 ```javascript
-// Subscription required*
+// Subscription required.
+
 socket.on('open-book', (data) => {
     console.log('open-book', data);
 });
@@ -606,7 +637,8 @@ open-book {
 
 #### Receive Historical book info
 ```javascript
-// Subscription required*
+//  Subscription required.
+
 socket.on('historical-book', (data) => {
     console.log('historical-book', data);
 });
@@ -656,7 +688,8 @@ socket.on('historical-book', (data) => {
 
 #### Receive candles info
 ```javascript
-// Subscription required*
+// Subscription required.
+
 socket.on('candles', (data) => {
     console.log('candles', data);
 });
@@ -731,6 +764,7 @@ ticker {
 [(top &uarr;)](#cryptomkt-node)
 
 #### Receive balance info
+
 ```javascript
 socket.on('balance', (data) => {
     console.log('balance', data);
@@ -756,6 +790,7 @@ balance {
 [(top &uarr;)](#cryptomkt-node)
 
 #### Receive user orders info
+
 ```javascript
 socket.on('open-orders', (data) => {
     console.log('open-orders', data);
@@ -786,6 +821,7 @@ open-orders [
 [(top &uarr;)](#cryptomkt-node)
 
 #### Receive historical user orders info
+
 ```javascript
 socket.on('historical-orders', (data) => {
     console.log('historical-orders', data);
@@ -793,6 +829,7 @@ socket.on('historical-orders', (data) => {
 ```
 
 ##### Expected Output
+
 ```javascript
 historical-orders [
   {
@@ -834,6 +871,7 @@ historical-orders [
 [(top &uarr;)](#cryptomkt-node)
 
 #### Receive User´s operated volume
+
 ```javascript
 socket.on('operated', (data) => {
     console.log('operated', data);
