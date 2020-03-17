@@ -1,5 +1,39 @@
 # cryptomkt-node
 
+- [Installation](#Installation)
+- [Quick Start](#Quick-Start)
+- [API Key](#API-Key)
+- [Making API Calls](#Making-API-Calls)
+  - [Public Endpoints](#Using-the-functions)
+    - [Listing available markets](#Listing-available-markets)
+    - [Obtain Book](#Obtain-Book)
+    - [Obtain ticker info](#Obtain-ticker-info)
+  - [Authenticated endpoints](#Authenticated-endpoints)
+    - [Get account info](#Get-account-info)
+    - [Create an order](#Create-an-order)
+    - [Create multiple orders](#Create-multiple-orders)
+    - [Obtain active orders](#Obtain-active-orders)
+    - [Cancel an order](#Cancel-an-order)
+    - [Cancel multiple orders](#Cancel-multiple-orders)
+    - [Make a transfer](#Make-a-transfer)
+    - [Obtain executed orders](#Obtain-executed-orders)
+    - [Obtain order status](#Obtain-order-status)
+    - [Obtain account balance](#Obtain-account-balance)
+- [Using socket](#Using-socket)
+  - [Get socket instance](#Get-socket-instance)
+  - [Receive socket events](#Receive-socket-events)
+    - [Market subscription](#Market-subscription)
+    - [Unsubscribe from market](#Unsubscribe-from-market)
+    - [Receive open book info](#Receive-open-book-info)
+    - [Receive Historical book info](#Receive-Historical-book-info)
+    - [Receive candles info](#Receive-candles-info)
+    - [Receive ticker info](#Receive-ticker-info)
+    - [Receive balance info](#Receive-balance-info)
+    - [Receive user orders info](#Receive-user-orders-info)
+    - [Receive historical user orders info](#Receive-historical-user-orders-info)
+    - [Receive User´s operated volume](#Receive-Users-operated-volume)
+
+
 ## Installation
 
 `npm install cryptomarket`
@@ -22,9 +56,11 @@ var client = new Client({'apiKey': mykey, 'apiSecret': mysecret});
 
 With a `client instance`, you can now make API calls. We've included some examples below.  Each API method returns an ``object`` representing the JSON response from the API.
 
+[(top &uarr;)](#cryptomkt-node)
+
 ### Public endpoints
 
-**Using the functions**
+#### Using the functions
 
 ```javascript
 async function example(){
@@ -58,7 +94,7 @@ async function example(){
 
 example();
 ```
-***Expected output***
+##### Expected output
 ```javascript
 //  Any of the 3 ways to call the function should return an output like this:
 
@@ -75,8 +111,9 @@ response: {
     ]
   }
 ````
+[(top &uarr;)](#cryptomkt-node)
 
-**Listing available markets**
+#### Listing available markets
 ```javascript
 var { Client } = require('cryptomarket');
 var client   = new Client({'apiKey': mykey, 'apiSecret': mysecret});
@@ -89,7 +126,7 @@ client.getMarkets()
         console.error(err);
     })
 ```
-***Expected output***
+##### Expected output
 ```javascript
 [
   'ETHCLP', 'ETHARS', 'ETHEUR',
@@ -102,8 +139,9 @@ client.getMarkets()
 ]
 ...
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Obtain Book**
+#### Obtain Book
 ```javascript
 //  Receives a Js object. "market" and "side" are mandatory. 
 //  Example: {"market": "XLMCLP", "side": "sell"}
@@ -115,7 +153,7 @@ client.getBook(object, (err, output) => {
    console.log(output);
 });
 ```
-***Expected output***
+##### Expected output
 ```javascript
 {
    "status": "success",
@@ -147,8 +185,10 @@ client.getBook(object, (err, output) => {
     ...    
     ]
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Obtain ticker info**
+#### Obtain ticker info
+
 ```javascript
 //  Receives a Js object that contains the market.
 //  Example: {"market": "XLMARS"}
@@ -160,7 +200,7 @@ client.getTicker(object, (err, output) => {
    console.log(output);
 });
 ```
-***Expected output***
+##### Expected output
 ```javascript
 {
   "status": "success",
@@ -179,10 +219,11 @@ client.getTicker(object, (err, output) => {
   ]
 } 
 ```
+[(top &uarr;)](#cryptomkt-node)
 
 ### Authenticated endpoints
 
-**Get account info**
+#### Get account info
 ```javascript
 var { Client } = require('cryptomarket');
 var client   = new Client({'apiKey': mykey, 'apiSecret': mysecret});
@@ -195,7 +236,7 @@ client.getAccount()
         console.error(err);
     })
 ```
-***Expected output***
+##### Expected output
 ```javascript
 {
   name: 'John Doe',
@@ -228,8 +269,10 @@ client.getAccount()
   ]
 }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Create an order**
+#### Create an order
+
 ```javascript
 //  Receives a Js object. "market", "type", "side" and "amount" are mandatory.
 //  (Example: {"amount": 1, "market": "XLMCLP", "price": 50.5, "type": "limit", "side": "sell"}
@@ -244,7 +287,7 @@ client.createOrder(object, (err, output) => {
    console.log(output);
 });
 ```
-***Expected output***
+##### Expected output
 ```javascript
 response: {
     status: 'success',
@@ -264,9 +307,10 @@ response: {
     }
   }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
 
-**Create multiple orders**
+#### Create multiple orders
 ```javascript
 //  Receives object array that contains multiple orders. "market", "type", "side" and "amount" are mandatory.
 //  Example: [{"amount": 1, "market": "XLMCLP", "price": 50.5, "type": "limit", "side": "sell"}, {Order2},...]
@@ -278,7 +322,7 @@ client.createMultiOrders(object, (err, output) => {
    console.log(output);
 });
 ```
-***Expected output***
+##### Expected output
 ```javascript
 response: {
   status: 'success',
@@ -288,8 +332,9 @@ response: {
     }
   }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Obtain active orders**
+#### Obtain active orders
 ```javascript
 //  Receives a Js object that contains the market
 //  Example: {"market":"XLMCLP"}
@@ -301,7 +346,7 @@ client.getActiveOrders(object, (err, output) => {
    console.log(output);
 });
 ```
-***Expected output***
+##### Expected output
 ```javascript
 {
   status: 'success',
@@ -341,8 +386,9 @@ client.getActiveOrders(object, (err, output) => {
     ]
     }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Cancel an order**
+#### Cancel an order
 ```javascript
 //  Receives object that contains the order's ID.
 //  Example: {"id":"O000004"}
@@ -354,7 +400,7 @@ client.cancelOrder(object, (err, output) => {
    console.log(output);
 });
 ```
-***Expected output***
+##### Expected output
 ```javascript
 response: {
     status: 'success',
@@ -374,8 +420,10 @@ response: {
     }
   }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Cancel multiple orders**
+#### Cancel multiple orders
+
 ```javascript
 //  Receives object array that contains multiple order's IDs. 
 //  Example: [{"id":"O000001"},{"id":"O000002"},...]
@@ -387,15 +435,17 @@ client.cancelMultiOrders(object, (err, output) => {
    console.log(output);
 });
 ```
-***Expected output***
+##### Expected output
 ```javascript
 response: {
 status: 'success',
 data: { canceled: [{Order1},{Order2},...], not_canceled: [] }
 }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Make a transfer**
+#### Make a transfer
+
 ```javascript
 //  Receives a Js object. "currency", "address", and "amount" are mandatory.
 //  Example: {"currency": "ETH", "address": "0xf2ec...", "amount": 0.02}
@@ -407,12 +457,13 @@ client.transfer(object, (err, output) => {
    console.log(output);
 });
 ```
-***Expected output***
+##### Expected output
 ```javascript
 { status: 'success', data: '' }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Obtain executed orders**
+#### Obtain executed orders
 ```javascript
 //  Receives a Js object that contains the market.
 //  Example: {"market":"XLMCLP"}
@@ -424,7 +475,7 @@ client.getExecutedOrders(object, (err, output) => {
    console.log(output);
 });
 ```
-***Expected output***
+##### Expected output
 ```javascript
 {
    "status": "success",
@@ -455,8 +506,9 @@ client.getExecutedOrders(object, (err, output) => {
    ]
 }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Obtain order status**
+#### Obtain order status
 ```javascript
 //  Receives a Js object that contains the ID.
 //  Example: {"id":"O000005"}
@@ -468,7 +520,7 @@ client.getOrderStatus(object, (err, output) => {
    console.log(output);
 });
 ```
-***Expected output***
+##### Expected output
 ```javascript
 response: {
     status: 'success',
@@ -489,8 +541,9 @@ response: {
     }
   }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Obtain account balance**
+#### Obtain account balance
 ```javascript
 client.getBalance((err, output) => {
     if(err){
@@ -500,7 +553,8 @@ client.getBalance((err, output) => {
     console.log(output);
 });
 ```
-***Expected Output***
+##### Expected output
+
 ```javascript
 {
    "status": "success",
@@ -519,7 +573,7 @@ client.getBalance((err, output) => {
    ]
 }
 ```
-
+[(top &uarr;)](#cryptomkt-node)
 
 ## Using socket
 
@@ -544,20 +598,21 @@ client.socket.connect()
 
 var socket = await client.socket.connect();
 ```
+[(top &uarr;)](#cryptomkt-node)
 
 ### Receive socket events
 
-**Market subscription**
+#### Market subscription
 ```javascript
 socket.subscribe('ETHCLP');
 ```
 
-**Unsubscribe from market**
+#### Unsubscribe from market
 ```javascript
 socket.unsubscribe('ETHCLP');
 ```
 
-**Receive open book info**
+#### Receive open book info
 ```javascript
 // Subscription required.
 
@@ -565,7 +620,7 @@ socket.on('open-book', (data) => {
     console.log('open-book', data);
 });
 ```
-***Expected Output***
+##### Expected Output
 ```javascript
 open-book {
   ETHCLP: {
@@ -578,8 +633,9 @@ open-book {
   }
 }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Receive Historical book info**
+#### Receive Historical book info
 ```javascript
 //  Subscription required.
 
@@ -587,7 +643,7 @@ socket.on('historical-book', (data) => {
     console.log('historical-book', data);
 });
 ```
-***Expected Output***
+##### Expected Output
 ```javascript
 [
 {
@@ -628,8 +684,9 @@ socket.on('historical-book', (data) => {
     }
   ]
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Receive candles info**
+#### Receive candles info
 ```javascript
 // Subscription required.
 
@@ -637,7 +694,7 @@ socket.on('candles', (data) => {
     console.log('candles', data);
 });
 ```
-***Expected Output***
+##### Expected Output
 ```javascript
 candles {
   'buy': {
@@ -672,14 +729,15 @@ candles {
 lastBuyPrice: 218880,lastSellPrice: 227220
 }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Receive ticker info**
+#### Receive ticker info
 ```javascript
 socket.on('ticker', (data) => {
     console.log('ticker', data);
 });
 ```
-***Expected Output***
+##### Expected Output
 ```javascript
 ticker {
   EOSARS: {
@@ -703,14 +761,16 @@ ticker {
   ...
 }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Receive Your Balance info**
+#### Receive balance info
+
 ```javascript
 socket.on('balance', (data) => {
     console.log('balance', data);
 });
 ```
-***Expected Output***
+##### Expected Output
 ```javascript
 balance {
   ETH: {
@@ -727,15 +787,16 @@ balance {
   ...
 }
 ```
+[(top &uarr;)](#cryptomkt-node)
 
+#### Receive user orders info
 
-**Receive Your Orders info**
 ```javascript
 socket.on('open-orders', (data) => {
     console.log('open-orders', data);
 });
 ```
-***Expected Output***
+##### Expected Output
 ```javascript
 open-orders [
   {
@@ -757,14 +818,18 @@ open-orders [
   {Order2},...
 ]
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Receive Your Historical orders info**
+#### Receive historical user orders info
+
 ```javascript
 socket.on('historical-orders', (data) => {
     console.log('historical-orders', data);
 });
 ```
-***Expected Output***
+
+##### Expected Output
+
 ```javascript
 historical-orders [
   {
@@ -803,14 +868,16 @@ historical-orders [
   ...
   ]
 ```
+[(top &uarr;)](#cryptomkt-node)
 
-**Receive Your operated volume**
+#### Receive User´s operated volume
+
 ```javascript
 socket.on('operated', (data) => {
     console.log('operated', data);
 });
 ```
-***Expected Output***
+##### Expected Output
 ```javascript
 operated {
   flag: 'L0',
@@ -820,4 +887,4 @@ operated {
   mk: '0.00390000000000000000000000000000000000'
 }
 ```
-
+[(top &uarr;)](#cryptomkt-node)
