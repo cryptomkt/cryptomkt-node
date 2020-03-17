@@ -1,5 +1,9 @@
 # cryptomkt-node
 
+<!--- badges -->
+[![NPM version](https://badge.fury.io/js/cryptomarket.svg)](https://badge.fury.io/js/cryptomarket)
+[![NPM dependencies](https://david-dm.org/cryptomkt/cryptomkt-node.svg)](https://david-dm.org/cryptomkt/cryptomkt-node)
+
 - [Installation](#Installation)
 - [Quick Start](#Quick-Start)
 - [API Key](#API-Key)
