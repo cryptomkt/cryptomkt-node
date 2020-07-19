@@ -39,7 +39,7 @@
 		"http-errors": "1.7.3",
 		"js-event-bus": "1.0.0",
 		"jsondiffpatch": "0.4.1",
-		"lodash": "4.17.15",
+		"lodash": "4.17.19",
 		"object-assign": "4.1.1",
 		"request": "2.88.0",
 		"socket.io-client": "2.3.0"
