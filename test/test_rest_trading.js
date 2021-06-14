@@ -1,8 +1,7 @@
 const { Client } = require("../lib/client")
-const keys = require("../../keys.json")
+const keys = require("/home/ismael/cryptomarket/apis/keys.json");
 const check = require("./test_helpers")
 const { fail } = require("assert");
-const { waitForDebugger } = require("inspector");
 
 function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -55,6 +54,7 @@ describe('create order with no client order id', () => {
 describe('cancel all orders', () => {    
     let client = new Client(keys.apiKey,keys.apiSecret);
     it('should succeed', async function() {
+        this.timeout(0)
         client.cancelAllOrders()  
         order = await client.createOrder({
             symbol: 'EOSETH',
@@ -68,8 +68,10 @@ describe('cancel all orders', () => {
             quantity: '0.01',
             price: '1001',
         })
+        orders = await client.getActiveOrders('EOSETH')
         response = await client.cancelAllOrders('EOSETH')
-        if (response.length == 2) fail("should only cancel one order")
+
+        if (response.length == orders.length) fail("it does not cancel all orders order, filter does not work")
         client.cancelAllOrders()  
     })
 })

@@ -1,5 +1,5 @@
 const { TradingClient } = require("../lib/websocket/tradingClient")
-const keys = require("../../keys.json");
+const keys = require("/home/ismael/cryptomarket/apis/keys.json");
 const { fail } = require("assert");
 const check = require("./test_helpers");
 

@@ -1,5 +1,5 @@
 const { TradingClient } = require("../lib/websocket/tradingClient")
-const keys = require("../../keys.json");
+const keys = require("/home/ismael/cryptomarket/apis/keys.json");
 const { fail } = require("assert");
 const check = require("./test_helpers")
 
@@ -15,7 +15,12 @@ describe('Subscribe to reports', function() {
         try {
             await wsclient.connect()
             await wsclient.subscribeToReports((feed) => {
-                if (!check.goodReport(feed)) fail("not a good report in feed")
+                if (Array.isArray(feed)) {
+                    for (let report of feed) {
+                        if (!check.goodReport(report)) {fail("not a good report in feed")}
+                    }
+                } else if (!check.goodReport(feed)) {fail("not a good report in feed")}
+                
             })
             await timeout(3 * second)
             let clientOrderId = Math.floor(Date.now() / 1000).toString()
