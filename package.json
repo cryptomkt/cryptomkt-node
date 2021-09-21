@@ -1,5 +1,11 @@
 {
-    "name": "cryptomarket-node",
+    "name": "cryptomarket",
+    "version": "1.0.5",
+    "description": "The CryptoMarket for Node.js",
+    "homepage": "https://www.cryptomkt.com",
+    "engines": {
+        "node": "*"
+    },
     "main": "lib/index.js",
     "scripts": {
         "test": "mocha"
@@ -8,6 +14,27 @@
     "directories": {
         "lib": "./lib"
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cryptomkt/cryptomkt-node.git"
+    },
+    "bugs": {
+        "url": "https://github.com/cryptomkt/cryptomkt-node/issues"
+    },
+    "keywords": [
+        "api",
+        "cryptomarket",
+        "cryptomkt",
+        "exchange",
+        "ethereum",
+        "ether",
+        "bitcoin",
+        "btc",
+        "eos",
+        "stellar",
+        "xlm"
+    ],
+    "license": "Apache-2.0",
     "dependencies": {
         "bigdecimal": "^0.6.1",
         "crypto-js": "^4.0.0",

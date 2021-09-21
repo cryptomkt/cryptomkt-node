@@ -11,7 +11,7 @@ npm install cryptomarket
 ```
 # Documentation
 
-[The api documentation](https://api.exchange.cryptomkt.com/#about-companyname-api)
+[The api documentation](https://api.exchange.cryptomkt.com)
 
 
 # Quick Start
@@ -145,11 +145,11 @@ try {
 ```
 
 # Checkout our other SDKs
-<!-- agregar links -->
-python sdk
 
-java sdk
+[python sdk](https://github.com/cryptomkt/cryptomkt-python)
 
-go sdk
+[java sdk](https://github.com/cryptomkt/cryptomkt-java)
 
-ruby sdk
+[go sdk](https://github.com/cryptomkt/cryptomkt-go)
+
+[ruby sdk](https://github.com/cryptomkt/cryptomkt-ruby)
