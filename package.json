@@ -38,7 +38,7 @@
     "dependencies": {
         "bigdecimal": "^0.6.1",
         "crypto-js": "^4.0.0",
-        "node-fetch": "^2.6.1",
+        "node-fetch": "^3.1.1",
         "rxjs": "^6.6.3",
         "ws": "^7.4.0"
     },
