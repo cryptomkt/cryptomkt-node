@@ -114,9 +114,11 @@ export enum NOTIFICATION {
 export enum CONTINGENCY {
   AON = "allOrNone",
   OCO = "oneCancelOther",
+  OTO = "oneTriggerOther",
   OTOCO = "oneTriggerOneCancelOther",
   ALL_OR_NONE = AON,
   ONE_CANCEL_OTHER = OCO,
+  ONE_TRIGGER_OTHER = OTO,
   ONE_TRIGGER_ONE_CANCEL_OTHER = OTOCO,
 }
 
