@@ -85,12 +85,14 @@ export class Client {
    * https://api.exchange.cryptomkt.com/#currencies
    *
    * @param {string[]} [currencies] Optional. A list of currencies ids
-   * @param [preferred_network] Optional. Code of the default network for currencies.
+   * @param {string} [preferred_network] Optional. Code of the default network for currencies.
    *
    * @return A list of available currencies
    */
-  getCurrencies(currencies?: string[], preferred_network?: string): Promise<{ [key: string]: Currency }> {
-    return this.get("public/currency", { currencies, preferred_network });
+  async getCurrencies(currencies?: string[], preferred_network?: string): Promise<{ [key: string]: Currency }> {
+    const response = await this.get("public/currency", { currencies, preferred_network });
+    console.log(response)
+    return response
   }
 
   /**
@@ -828,13 +830,13 @@ export class Client {
    *
    * Requires the "Payment information" API key Access Right.
    *
-   * https://api.exchange.cryptomkt.com/#deposit-crypto-address
+   * https://api.exchange.cryptomkt.com/#generate-deposit-crypto-address
    *
    * @param {string} currency currency to create a new address
    *
    * @return The created address for the currency
    */
-  createDepositCryptoAddress(currency: string): Promise<Address> {
+  createDepositCryptoAddress(currency: string, network_code?: string): Promise<Address> {
     return this.post(`wallet/crypto/address`, { currency });
   }
 

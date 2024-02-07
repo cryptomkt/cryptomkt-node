@@ -13,6 +13,7 @@ export interface Currency {
   account_top_order: number;
   qr_prefix: string;
   delisted: boolean;
+  contract_address: string;
   networks: Network[];
 }
 

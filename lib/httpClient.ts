@@ -24,7 +24,6 @@ export class HttpClient {
     publc: boolean = false
   ): Promise<any> {
     const { url, opts } = this.prepareRequest(params, method, publc, endpoint);
-    console.log(opts)
     try {
       return await this.makeFetch(url, opts);
     } catch (e) {
