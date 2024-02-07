@@ -7,10 +7,11 @@ import {
   goodAddress,
   goodAmountLock,
   goodBalance,
+  goodFee,
   goodList,
   goodTransaction,
 } from "../test_helpers";
-const keys = require("/home/ismael/cryptomarket/keys-v3.json");
+const keys = require("/home/ismael/cryptomarket/keys.json");
 
 describe("wallet management", () => {
   let client = new Client(keys.apiKey, keys.apiSecret);
@@ -138,6 +139,16 @@ describe("wallet management", () => {
       assert(fee !== "", "not a good fee");
     });
   });
+  describe("get estimates withdrawal fees", () => {
+    it("", async function () {
+      this.timeout(0);
+      let fees = await client.getEstimateWithdrawFees([
+        { currency: "CRO", amount: "100" },
+        { currency: "EOS", amount: "12" }
+      ]);
+      fees.forEach(fee => assert(goodFee(fee), "not good address"))
+    });
+  });
   describe("check if crypto address belongs to current account", () => {
     it("cro belongs", async function () {
       this.timeout(0);
@@ -145,7 +156,7 @@ describe("wallet management", () => {
       let result = await client.checkIfCryptoAddressBelongsToCurrentAccount(
         croAddress.address
       );
-      assert(result == true, "does not belong");
+      assert(result === true, "does not belong");
     });
     it.skip("eos belongs", async function () {
       this.timeout(0);
@@ -153,14 +164,14 @@ describe("wallet management", () => {
       let result = await client.checkIfCryptoAddressBelongsToCurrentAccount(
         eosAddress.address
       );
-      assert(result == true, "does not belong");
+      assert(result === true, "does not belong");
     });
     it("does not belong", async function () {
       this.timeout(0);
       const result = await client.checkIfCryptoAddressBelongsToCurrentAccount(
         "abc"
       );
-      assert(result == false, "belong");
+      assert(result === false, "belong");
     });
   });
   describe("transfer between wallet and exchange", () => {

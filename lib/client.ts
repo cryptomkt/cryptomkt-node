@@ -1,10 +1,3 @@
-import CryptoJS from "crypto-js";
-import fetch from "node-fetch";
-import {
-  CryptomarketSDKException,
-  CryptomarketAPIException,
-} from "./exceptions";
-import { URL, URLSearchParams } from "url";
 import {
   ACCOUNT,
   CONTINGENCY,
@@ -21,6 +14,7 @@ import {
   TRANSFER_TYPE,
   USE_OFFCHAIN,
 } from "./constants";
+import { HttpClient } from "./httpClient";
 import {
   ACLSettings,
   Address,
@@ -29,6 +23,8 @@ import {
   Candle,
   Commission,
   Currency,
+  Fee,
+  FeeRequest,
   Order,
   OrderBook,
   OrderRequest,
@@ -42,129 +38,39 @@ import {
   Transaction,
 } from "./models";
 
-const apiUrl = "https://api.exchange.cryptomkt.com";
-const apiVersion = "/api/3/";
 
-const methodGet = "GET";
-const methodPut = "PUT";
-const methodPatch = "PATCH";
-const methodPost = "POST";
-const methodDelete = "DELETE";
 
 export class Client {
-  apiKey: string;
-  apiSecret: string;
-  window: number | null;
+  apiUrl = "https://api.exchange.cryptomkt.com";
+  apiVersion = "3";
+  httpClient: HttpClient
 
   constructor(apiKey: string, apiSecret: string, window: number | null = null) {
-    this.apiKey = apiKey;
-    this.apiSecret = apiSecret;
-    this.window = window;
+    this.httpClient = new HttpClient(this.apiUrl, this.apiVersion, apiKey, apiSecret, window)
   }
 
   async publicGet(endpoint: string, params: any) {
-    return this.makeRequest(methodGet, endpoint, params, true);
+    return this.httpClient.publicGet(endpoint, params);
   }
 
   async get(endpoint: string, params: any | null = null) {
-    return this.makeRequest(methodGet, endpoint, params);
+    return this.httpClient.get(endpoint, params);
   }
 
   async patch(endpoint: string, params: any) {
-    return this.makeRequest(methodPatch, endpoint, params);
+    return this.httpClient.patch(endpoint, params);
   }
 
   async post(endpoint: string, params: any) {
-    return this.makeRequest(methodPost, endpoint, params);
+    return this.httpClient.post(endpoint, params);
   }
 
   async delete(endpoint: string, params: any | null = null) {
-    return this.makeRequest(methodDelete, endpoint, params);
+    return this.httpClient.delete(endpoint, params);
   }
 
   async put(endpoint: string, params: any | null = null) {
-    return this.makeRequest(methodPut, endpoint, params);
-  }
-
-  async makeRequest(
-    method: string,
-    endpoint: string,
-    params: any,
-    publc: boolean = false
-  ) {
-    let url = new URL(apiUrl + apiVersion + endpoint);
-    for (let key in params) {
-      if (params[key] == null) {
-        delete params[key];
-      }
-    }
-    let rawQuery = new URLSearchParams(params);
-    rawQuery.sort();
-    let query = rawQuery.toString();
-
-    // build fetch options
-    let opts: any = {
-      method: method,
-      headers: {
-        "User-Agent": "cryptomarket/node",
-        "Content-type": "application/x-www-form-urlencoded",
-      },
-    };
-    // add auth header if not public endpoint
-    if (!publc)
-      opts.headers["Authorization"] = this.buildCredential(method, url, query);
-
-    // include query params to call
-    if (method === methodGet || method === methodPut) url.search = query;
-    else opts.body = query;
-
-    // make request
-    let response: { json: () => any; ok: boolean; status: any };
-    try {
-      response = await fetch(url, opts);
-    } catch (e) {
-      throw new CryptomarketSDKException("Failed request to server", e);
-    }
-    let jsonResponse: any;
-    try {
-      jsonResponse = await response.json();
-    } catch (e) {
-      throw new CryptomarketSDKException(
-        `Failed to parse response: ${response}`,
-        e
-      );
-    }
-    if (!response.ok) {
-      throw new CryptomarketAPIException(
-        jsonResponse["error"],
-        response.status
-      );
-    }
-    return jsonResponse;
-  }
-
-  /**
-   *
-   * @param {URL} url
-   * @returns
-   */
-  buildCredential(httpMethod: string, url: URL, query: string) {
-    let timestamp = Math.floor(Date.now()).toString();
-    let msg = httpMethod + url.pathname;
-    if (query) {
-      if (httpMethod === methodGet) msg += "?";
-      msg += query;
-    }
-    msg += timestamp;
-    if (this.window) {
-      msg += this.window;
-    }
-    let signature = CryptoJS.HmacSHA256(msg, this.apiSecret).toString();
-    let signed = this.apiKey + ":" + signature + ":" + timestamp;
-    if (this.window) {
-      signed += ":" + this.window;
-    }
-    return `HS256 ${Buffer.from(signed).toString("base64")}`;
+    return this.httpClient.put(endpoint, params);
   }
 
   //////////////////
@@ -179,10 +85,11 @@ export class Client {
    * https://api.exchange.cryptomkt.com/#currencies
    *
    * @param {string[]} [currencies] Optional. A list of currencies ids
+   * @param [preferred_network] Optional. Code of the default network for currencies.
    *
    * @return A list of available currencies
    */
-  getCurrencies(currencies?: string[]): Promise<{ [key: string]: Currency[] }> {
+  getCurrencies(currencies?: string[], preferred_network?: string): Promise<{ [key: string]: Currency[] }> {
     return this.get("public/currency/", { currencies });
   }
 
@@ -693,7 +600,7 @@ export class Client {
    * @return A promise that resolves with a list of reports of the created orders
    */
   async createNewSpotOrderList(params: {
-    order_list_id: string;
+    order_list_id?: string;
     contingency_type: CONTINGENCY;
     orders: OrderRequest[];
   }): Promise<Order[]> {
@@ -1041,6 +948,21 @@ Accepted values: never, optionally, required
   }
 
   /**
+   * Get estimates of withdrawal fees
+   *
+   * Requires the "Payment information" API key Access Right.
+   *
+   * https://api.exchange.cryptomkt.com/#get-spot-fees
+   *
+   * @param {FeeRequest[]} feeRequests A list of fee requests
+   *
+   * @return The list of requested fees
+   */
+  async getEstimateWithdrawFees(feeRequests: FeeRequest[]): Promise<Fee[]> {
+    return this.post("wallet/crypto/fees/estimate", feeRequests);
+  }
+
+  /**
    * Get an estimate of the withdrawal fee
    *
    * Requires the "Payment information" API key Access Right.
@@ -1050,12 +972,14 @@ Accepted values: never, optionally, required
    * @param {object} params
    * @param {string} params.currency the currency code for withdraw
    * @param {string} params.amount the expected withdraw amount
+   * @param {string} [params.netwrok_code] Optional. Network code
    *
    * @return The expected fee
    */
   async getEstimateWithdrawFee(params: {
     currency: string;
     amount: string;
+    network_code?: string;
   }): Promise<string> {
     const response = await this.get("wallet/crypto/fee/estimate", params);
     return response["fee"];

@@ -22,3 +22,5 @@ export * from "./models/Transactions";
 export * from "./models/WSCandle";
 export * from "./models/WSTicker";
 export * from "./models/WSTrades";
+export * from "./models/Fee";
+export * from "./models/FeeRequest";

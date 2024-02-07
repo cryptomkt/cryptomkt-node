@@ -93,6 +93,11 @@ export enum TICKER_SPEED {
   _3_S = "3s",
 }
 
+export enum PRICE_RATE_SPEED {
+  _1_S = "1s",
+  _3_S = "3s",
+}
+
 export enum ORDER_BOOK_SPEED {
   _100_MS = "100ms",
   _500_MS = "500ms",
@@ -130,6 +135,7 @@ export enum ORDER_STATUS {
   CANCELED = "canceled",
   EXPIRED = "expired",
 }
+export const REPORT_STATUS = ORDER_STATUS;
 
 export enum REPORT_TYPE {
   STATUS = "status",
@@ -141,6 +147,7 @@ export enum REPORT_TYPE {
   TRADE = "trade",
   REPLACED = "replaced",
 }
+
 
 export enum SYMBOL_STATUS {
   WORKING = "working",
@@ -163,4 +170,9 @@ export enum NOTIFICATION_TYPE {
   UPDATE = "update",
   DATA = "data",
   COMMAND = "COMMAND",
+}
+
+export enum SUBSCRIPTION_MODE {
+  UPDATES = "updates",
+  BATCHES = "batches",
 }

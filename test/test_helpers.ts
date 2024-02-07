@@ -1,3 +1,5 @@
+import { Fee, Report } from "../lib/models";
+
 export const timeout = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
@@ -151,6 +153,41 @@ export function goodPublicTrade(trade: any) {
   return goodObject(trade, ["id", "price", "qty", "side", "timestamp"]);
 }
 
+// goodPublicTrade check the precence of every field in the trade dict
+export function goodWSTrade(trade: any) {
+  return goodObject(trade, ["t", "i", "p", "q", "s"]);
+}
+
+// goodPublicTrade check the precence of every field in the trade dict
+export function goodWSCandle(candle: any) {
+  return goodObject(candle, ["t", "o", "c", "h", "l", "v", "q"]);
+}
+
+
+// goodPublicTrade check the precence of every field in the trade dict
+export function goodWSTicker(ticker: any) {
+  return goodObject(ticker, ["t", "a", "A", "b", "B", "c", "o", "h", "l", "v", "q", "p", "P", "L"]);
+}
+
+
+export function goodWSOrderbook(orderbook: any) {
+  const goodOrderbook = goodObject(orderbook, ["t", "s", "a", "b"]);
+  if (!goodOrderbook) return false;
+
+  for (const level of orderbook["a"]) {
+    if (!goodOrderbookLevel(level)) return false;
+  }
+  for (const level of orderbook["b"]) {
+    if (!goodOrderbookLevel(level)) return false;
+  }
+  return true;
+}
+// goodPublicTrade check the precence of every field in the trade dict
+export function goodWSOrderbookTop(orderbookTop: any) {
+  return goodObject(orderbookTop, ["t", "a", "A", "b", "B"]);
+}
+
+
 // goodOrderbookLevel check the precence of every field in the level dict
 export function goodOrderbookLevel(level: string | any[]) {
   return level.length == 2;
@@ -263,6 +300,15 @@ export function goodAddress(transaction: any) {
   ]);
 }
 
+export function goodFee(fee: Fee) {
+  return goodObject(fee, [
+    "fee",
+    "networkFee",
+    "amount",
+    "currency"
+  ]);
+}
+
 // goodTransaction check the precence of every field in the transaction dict
 export function goodTransaction(transaction: { native: any }) {
   let good = goodObject(transaction, [
@@ -325,22 +371,22 @@ export function goodMetaTransaction(transaction: any) {
   ]);
 }
 
-export function goodReport(report: any) {
+export function goodReport(report: Report) {
   return goodObject(report, [
     "id",
-    "clientOrderId",
+    "client_order_id",
     "symbol",
     "side",
     "status",
     "type",
-    "timeInForce",
+    "time_in_force",
     "quantity",
+    "quantity_cumulative",
     "price",
-    "cumQuantity",
-    // "postOnly", // does not appears in the orders in orders history
-    "createdAt",
-    "updatedAt",
-    "reportType",
+    "post_only",
+    "created_at",
+    "updated_at",
+    // "report_type", not present in order list reports
   ]);
 }
 
@@ -355,5 +401,13 @@ export function goodAmountLock(report: any) {
     "cancelled_at",
     "cancel_description",
     "created_at",
+  ]);
+}
+
+
+export function goodPriceRate(report: any) {
+  return goodObject(report, [
+    "t",
+    "r"
   ]);
 }

@@ -11,9 +11,10 @@ import {
 
 /**
  * WalletClient connects via websocket to cryptomarket to get wallet information of the user. uses SHA256 as auth method and authenticates on connection.
+ * @param requestTimeoutMs Timeout time for requests to the server. No timeout by default
  */
 export class WalletClient extends AuthClient {
-  constructor(apiKey: string, apiSecret: string, window: number | null = null) {
+  constructor(apiKey: string, apiSecret: string, window?: number, requestTimeoutMs?: number) {
     const transactionKey = "transaction";
     const balanceKey = "balance";
     super(
@@ -21,37 +22,17 @@ export class WalletClient extends AuthClient {
       apiKey,
       apiSecret,
       window,
+      requestTimeoutMs,
       {
         // transaction
-        subscribe_transactions: {
-          key: transactionKey,
-          type: NOTIFICATION_TYPE.COMMAND,
-        },
-        unsubscribe_transactions: {
-          key: transactionKey,
-          type: NOTIFICATION_TYPE.COMMAND,
-        },
-        transaction_update: {
-          method: transactionKey,
-          type: NOTIFICATION_TYPE.UPDATE,
-        },
+        subscribe_transactions: { key: transactionKey, type: NOTIFICATION_TYPE.COMMAND },
+        unsubscribe_transactions: { key: transactionKey, type: NOTIFICATION_TYPE.COMMAND },
+        transaction_update: { key: transactionKey, type: NOTIFICATION_TYPE.UPDATE },
         // balance
-        subscribe_wallet_balances: {
-          key: balanceKey,
-          type: NOTIFICATION_TYPE.COMMAND,
-        },
-        unsubscribe_wallet_balances: {
-          key: balanceKey,
-          type: NOTIFICATION_TYPE.COMMAND,
-        },
-        wallet_balances: {
-          key: balanceKey,
-          type: NOTIFICATION_TYPE.SNAPSHOT,
-        },
-        wallet_balance_update: {
-          key: balanceKey,
-          type: NOTIFICATION_TYPE.UPDATE,
-        },
+        subscribe_wallet_balances: { key: balanceKey, type: NOTIFICATION_TYPE.COMMAND },
+        unsubscribe_wallet_balances: { key: balanceKey, type: NOTIFICATION_TYPE.COMMAND },
+        wallet_balances: { key: balanceKey, type: NOTIFICATION_TYPE.SNAPSHOT },
+        wallet_balance_update: { key: balanceKey, type: NOTIFICATION_TYPE.UPDATE },
       }
     );
   }
@@ -79,11 +60,9 @@ export class WalletClient extends AuthClient {
    * @param {string} currency The currency code to query the balance
    * @return A promise that resolves with the wallet balance of the currency
    */
-  getWalletBalanceOfCurrency(params: { currency: string }): Promise<Balance> {
-    return this.makeRequest<Balance>({
-      method: "wallet_balance",
-      params,
-    });
+  async getWalletBalanceOfCurrency(currency: string): Promise<Balance> {
+    const response = await this.makeRequest<Balance>({ method: "wallet_balance", params: { currency } });
+    return { available: response.available, reserved: response.reserved, currency: currency };
   }
 
   /**
@@ -130,9 +109,11 @@ export class WalletClient extends AuthClient {
     limit?: number;
     offset?: number;
   }): Promise<Transaction[]> {
+    const clean_params: any = { ...params }
+    clean_params.currencies = params.currencies?.join(", ")
     return this.makeRequest<Transaction[]>({
       method: "get_transactions",
-      params,
+      params: clean_params
     });
   }
 
@@ -151,16 +132,11 @@ export class WalletClient extends AuthClient {
   async subscribeToTransactions(
     callback: (notification: Transaction, type: NOTIFICATION_TYPE) => any
   ): Promise<Boolean> {
-    return (
-      (await this.sendSubscription({
-        method: "subscribe_transactions",
-        callback: (notification: any, type: NOTIFICATION_TYPE) => {
-          callback(notification as Transaction, type);
-        },
-      })) as {
-        result: boolean;
-      }
-    ).result;
+    const subscriptionResult = await this.sendSubscription({
+      method: "subscribe_transactions",
+      callback: (notification: any, type: NOTIFICATION_TYPE) => callback(notification as Transaction, type),
+    });
+    return (subscriptionResult as { result: boolean }).result;
   }
 
   /**
@@ -177,7 +153,7 @@ export class WalletClient extends AuthClient {
   }
 
   /**
-   * Subscribe to a feed of the balances of the account
+   * Subscribe to a feed of the balances of the account balances
    *
    * the first notification has a snapshot of the wallet. further notifications
    * are updates of the wallet
@@ -215,7 +191,7 @@ export class WalletClient extends AuthClient {
    */
   unsubscribeToBalance(): Promise<Boolean> {
     return this.sendUnsubscription({
-      method: "ununsubscribe_wallet_balances",
+      method: "unsubscribe_wallet_balances",
     });
   }
 }

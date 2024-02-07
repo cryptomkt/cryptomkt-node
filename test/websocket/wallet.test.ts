@@ -1,59 +1,44 @@
-const keys = require("/home/ismael/cryptomarket/keys-v3.json");
-import { fail } from "assert";
-import "mocha";
+const keys = require("/home/ismael/cryptomarket/keys.json");
 import { expect } from "chai";
+import "mocha";
 import { WSWalletClient } from "../../lib";
+import { goodBalance, goodTransaction } from "../test_helpers";
 
 describe("WalletClient", function () {
   let wsclient: WSWalletClient;
   beforeEach(() => {
-    wsclient = new WSWalletClient(keys.apiKey, keys.apiSecret);
+    wsclient = new WSWalletClient(keys.apiKey, keys.apiSecret, undefined, 10_000);
   });
 
   afterEach(() => {
     wsclient.close();
   });
 
-  describe("get account balance", function () {
-    it("list", async function () {
+  describe("get wallet balance", function () {
+    it("gets wallet balance list", async function () {
       this.timeout(0);
       await wsclient.connect();
-      try {
-        const balances = await wsclient.getWalletBalances();
-        console.log(balances);
-        expect(balances.length).to.be.greaterThan(1);
-      } catch (err) {
-        fail("should not fail. " + err);
-      }
+      const balances = await wsclient.getWalletBalances();
+      expect(balances.length).to.be.greaterThan(1);
+      const allGood = balances.map(goodBalance).every(Boolean)
+      expect(allGood).to.be.true
     });
-    it("single", async function () {
+    it("gets only one balance", async function () {
       this.timeout(0);
       await wsclient.connect();
-      try {
-        const balance = await wsclient.getWalletBalanceOfCurrency({
-          currency: "EOS",
-        });
-        console.log(balance);
-      } catch (err) {
-        fail("should not fail. " + err);
-      }
+      const balance = await wsclient.getWalletBalanceOfCurrency("EOS");
+      expect(goodBalance(balance)).to.be.true
     });
   });
 
   describe("get transactions", function () {
-    it("should succeed", async function () {
+    it("gets a list of transactions", async function () {
       this.timeout(0);
       await wsclient.connect();
-      try {
-        const transactions = await wsclient.getTransactions({
-          currencies: ["EOS"],
-          limit: 3,
-        });
-        console.log(transactions);
-      } catch (err) {
-        fail("should not fail. " + err);
-      }
-      wsclient.close();
+      const transactions = await wsclient.getTransactions({ currencies: ["EOS"], limit: 3 });
+      const allGood = transactions.map(goodTransaction).every(Boolean)
+      expect(allGood).to.be.true
+      await wsclient.close();
     });
   });
 });

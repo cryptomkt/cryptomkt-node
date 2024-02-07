@@ -1,24 +1,40 @@
 import CryptoJS from "crypto-js";
 import { WSClientBase } from "./clientBase";
 
+interface AuthPayload {
+  type: string
+  api_Key: string
+  timestamp: number
+  window?: number
+  signature: string
+}
+
 export class AuthClient extends WSClientBase {
   private apiKey: string;
   private apiSecret: string;
-  private window: number | null;
+  private window?: number | null;
 
   constructor(
     url: string,
     apiKey: string,
     apiSecret: string,
-    window: number | null = null,
+    window?: number,
+    requestTimeoutMs?: number,
     subscriptionKeys = {}
   ) {
-    super(url, subscriptionKeys);
+    super(url, subscriptionKeys, requestTimeoutMs);
     this.apiKey = apiKey;
     this.apiSecret = apiSecret;
-    this.window = window;
+    this.window = window || null;
   }
 
+  /**
+   * Connects the client with the server
+   * 
+   * Initializes the internal websocket, and then authenticates the client to permit user related calls
+   * 
+   * @returns A prommise that resolves after the authentication
+   */
   async connect(): Promise<void> {
     await super.connect();
     await this.authenticate();
@@ -31,29 +47,34 @@ export class AuthClient extends WSClientBase {
    *
    * @param {function} [callback] Optional. A function to call with the result data. It takes two arguments, err and result. err is None for successful calls, result is None for calls with error: callback(err, result)
    *
-   * @return The transaction status as result argument for the callback.
+   * @returns The transaction status as result argument for the callback.
    */
-  authenticate() {
+  private authenticate() {
     const timestamp = Math.floor(Date.now());
-    const params = {
+    const payload: AuthPayload = {
       type: "HS256",
       api_Key: this.apiKey,
       timestamp: timestamp,
+      signature: "",
     };
     let toSign = timestamp.toString();
     if (this.window) {
-      params["window"] = this.window;
+      payload.window = this.window;
       toSign += this.window.toString();
     }
     const signature = CryptoJS.HmacSHA256(toSign, this.apiSecret).toString();
-    params["signature"] = signature;
-    return this.sendById({
+    payload.signature = signature;
+    return this.request({
       method: "login",
-      params,
+      params: payload,
     });
   }
 
-  async makeRequest<T>(params: { method: string; params?: any }): Promise<T> {
-    return (await this.sendById(params)) as T;
+  async makeListRequest<T>(requestParams: { method: string; params?: any, responseCount?: number }): Promise<T[]> {
+    return (await this.requestList(requestParams)) as T[];
+  }
+
+  async makeRequest<T>(requestParams: { method: string; params?: any }): Promise<T> {
+    return (await this.request(requestParams)) as T;
   }
 }

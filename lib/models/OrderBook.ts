@@ -15,6 +15,17 @@ export interface OrderBookTop {
   B: string;
 }
 
+export interface PriceRate {
+  /**
+   * timestamp
+   */
+  t: number,
+  /**
+   * rate
+   */
+  r: string
+}
+
 export interface OrderBook {
   timestamp: string;
   ask: OrderBookLevel[];

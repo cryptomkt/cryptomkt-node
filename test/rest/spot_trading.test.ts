@@ -1,8 +1,11 @@
 import assert from "assert";
 import "mocha";
 import { Client } from "../../lib/client";
-import { SIDE } from "../../lib/constants";
+
+import { CONTINGENCY, ORDER_TYPE, SIDE, TIME_IN_FORCE } from "../../lib/constants";
 import {
+  SECOND,
+  timeout,
   emptyList,
   goodBalance,
   goodList,
@@ -10,7 +13,7 @@ import {
   goodTradingCommission,
   listSize,
 } from "../test_helpers";
-const keys = require("/home/ismael/cryptomarket/keys-v3.json");
+const keys = require("/home/ismael/cryptomarket/keys.json");
 
 describe("spot trading", () => {
   let client = new Client(keys.apiKey, keys.apiSecret);
@@ -148,4 +151,36 @@ describe("spot trading", () => {
       );
     });
   });
+
+  describe("create spot order list", () => {
+    it("should create a list of orders", async function () {
+      this.timeout(0);
+      await timeout(3 * SECOND)
+
+       let order_list_id = Date.now().toString();
+      await client.createNewSpotOrderList({
+        // order_list_id: order_list_id,
+        contingency_type: CONTINGENCY.ALL_OR_NONE,
+        orders: [
+          {
+            symbol: 'EOSETH',
+            side: SIDE.SELL,
+            type: ORDER_TYPE.LIMIT,
+            time_in_force: TIME_IN_FORCE.FOK,
+            quantity: '0.1',
+            price: '1000',
+            // client_order_id: order_list_id
+          },
+          {
+            symbol: 'EOSUSDT',
+            side: SIDE.SELL,
+            type: ORDER_TYPE.LIMIT,
+            time_in_force: TIME_IN_FORCE.FOK,
+            quantity: '0.1',
+            price: '1000'
+          }
+        ]
+      });
+    })
+  })
 });

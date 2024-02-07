@@ -1,7 +1,7 @@
 import assert from "assert";
 import { Client } from "../../lib";
 import { goodList, goodOrder, goodTrade } from "../test_helpers";
-const keys = require("/home/ismael/cryptomarket/keys-v3.json");
+const keys = require("/home/ismael/cryptomarket/keys.json");
 
 import "mocha";
 

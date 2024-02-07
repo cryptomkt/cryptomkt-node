@@ -4,6 +4,7 @@ import {
   NOTIFICATION_TYPE,
   ORDER_BOOK_SPEED,
   PERIOD,
+  PRICE_RATE_SPEED,
   TICKER_SPEED,
 } from "../constants";
 import { CryptomarketAPIException } from "../exceptions";
@@ -11,18 +12,23 @@ import {
   Candle,
   MiniTicker,
   OrderBookTop,
+  PriceRate,
   Ticker,
   Trade,
+  WSCandle,
   WSOrderBook,
+  WSTicker,
+  WSTrade,
 } from "../models";
 import { WSClientBase } from "./clientBase";
 
 /**
  * MarketDataClient connects via websocket to cryptomarket to get market information of the exchange.
+ * @param requestTimeoutMs Timeout time for subscription and unsubscription requests to the server. No timeout by default.
  */
 export class MarketDataClient extends WSClientBase {
-  constructor() {
-    super("wss://api.exchange.cryptomkt.com/api/3/ws/public");
+  constructor(requestTimeoutMs?: number) {
+    super("wss://api.exchange.cryptomkt.com/api/3/ws/public", {}, requestTimeoutMs);
   }
 
   protected override handle({ msgJson }: { msgJson: string }): void {
@@ -86,14 +92,19 @@ export class MarketDataClient extends WSClientBase {
     callback,
     params,
     withDefaultSymbols = false,
+    withDefaultCurrencies = false,
   }: {
     channel: string;
     callback: any;
     params: any;
     withDefaultSymbols?: boolean;
+    withDefaultCurrencies?: boolean;
   }): Promise<string[]> {
     if (withDefaultSymbols && !params.symbols) {
       params.symbols = ["*"];
+    }
+    if (withDefaultCurrencies && !params.currencies) {
+      params.currencies = ["*"];
     }
     const { subscriptions } = (await this.sendChanneledSubscription({
       channel,
@@ -125,17 +136,17 @@ export class MarketDataClient extends WSClientBase {
    * @param {number} params.limit Number of historical entries returned in the first feed. Min is 0. Max is 1000. Default is 0
    * @returns a promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
-  async subscribeToTrades({
+  subscribeToTrades({
     callback,
     params,
   }: {
     callback: (
-      notification: { [x: string]: Trade[] },
+      notification: { [x: string]: WSTrade[] },
       type: NOTIFICATION_TYPE
     ) => any;
     params: { symbols: string[]; limit?: number };
   }): Promise<string[]> {
-    return await this.makeSubscription({
+    return this.makeSubscription({
       channel: "trades",
       callback,
       params,
@@ -162,17 +173,17 @@ export class MarketDataClient extends WSClientBase {
    * @param {number} params.limit Number of historical entries returned in the first feed. Min is 0. Max is 1000. Default is 0
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
-  async subscribeToCandles({
+  subscribeToCandles({
     callback,
     params: { period, ...params },
   }: {
     callback: (
-      notification: { [x: string]: Candle[] },
+      notification: { [x: string]: WSCandle[] },
       type: NOTIFICATION_TYPE
     ) => any;
     params: { period: PERIOD; symbols: string[]; limit?: number };
   }): Promise<string[]> {
-    return await this.makeSubscription({
+    return this.makeSubscription({
       channel: `candles/${period}`,
       callback,
       params,
@@ -195,17 +206,17 @@ export class MarketDataClient extends WSClientBase {
    * @param {string[]} [params.symbols] Optional. A list of symbol ids
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
-  async subscribeToMiniTicker({
+  subscribeToMiniTicker({
     callback,
     params: { speed, ...params },
   }: {
     callback: (
-      notification: { [x: string]: MiniTicker[] },
+      notification: { [x: string]: MiniTicker },
       type: NOTIFICATION_TYPE
     ) => any;
     params: { speed: TICKER_SPEED; symbols?: string[] };
   }): Promise<string[]> {
-    return await this.makeSubscription({
+    return this.makeSubscription({
       channel: `ticker/price/${speed}`,
       callback,
       params,
@@ -229,7 +240,7 @@ export class MarketDataClient extends WSClientBase {
    * @param {string[]} [params.symbols] Optional. A list of symbol ids
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
-  async subscribeToMiniTickerInBatches({
+  subscribeToMiniTickerInBatches({
     callback,
     params: { speed, ...params },
   }: {
@@ -239,7 +250,7 @@ export class MarketDataClient extends WSClientBase {
     ) => any;
     params: { speed: TICKER_SPEED; symbols?: string[] };
   }): Promise<string[]> {
-    return await this.makeSubscription({
+    return this.makeSubscription({
       channel: `ticker/price/${speed}/batch`,
       callback,
       params,
@@ -260,20 +271,20 @@ export class MarketDataClient extends WSClientBase {
    *
    * @param {function} callback a function that recieves notifications as a dict of tickers indexed by symbol id, and the type of notification (only DATA)
    * @param {TICKER_SPEED} params.speed The speed of the feed. '1s' or '3s'
-   * @param {string[]} [param.ssymbols] Optional. A list of symbol ids
+   * @param {string[]} [param.symbols] Optional. A list of symbol ids
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
-  async subscribeToTicker({
+  subscribeToTicker({
     callback,
     params: { speed, ...params },
   }: {
     callback: (
-      notification: { [x: string]: Ticker[] },
+      notification: { [x: string]: WSTicker },
       type: NOTIFICATION_TYPE
     ) => any;
     params: { speed: TICKER_SPEED; symbols?: string[] };
   }): Promise<string[]> {
-    return await this.makeSubscription({
+    return this.makeSubscription({
       channel: `ticker/${speed}`,
       callback,
       params,
@@ -297,7 +308,7 @@ export class MarketDataClient extends WSClientBase {
    * @param {string[]} [params.symbols] Optional. A list of symbol ids
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
-  async subscribeToTickerInBatches({
+  subscribeToTickerInBatches({
     callback,
     params: { speed, ...params },
   }: {
@@ -307,7 +318,7 @@ export class MarketDataClient extends WSClientBase {
     ) => any;
     params: { speed: TICKER_SPEED; symbols?: string[] };
   }): Promise<string[]> {
-    return await this.makeSubscription({
+    return this.makeSubscription({
       channel: `ticker/${speed}/batch`,
       callback,
       params,
@@ -330,17 +341,17 @@ export class MarketDataClient extends WSClientBase {
    * @param {string[]} [params.symbols] Optional. A list of symbol ids
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
-  async subscribeToFullOrderBook({
+  subscribeToFullOrderBook({
     callback,
     params,
   }: {
     callback: (
-      notification: { [x: string]: WSOrderBook[] },
+      notification: { [x: string]: WSOrderBook },
       type: NOTIFICATION_TYPE
     ) => any;
     params: { symbols?: string[] };
   }): Promise<string[]> {
-    return await this.makeSubscription({
+    return this.makeSubscription({
       channel: "orderbook/full",
       callback,
       params,
@@ -364,12 +375,12 @@ export class MarketDataClient extends WSClientBase {
    * @param {string[]} [params.symbols] Optional. A list of symbol ids
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
-  async subscribeToPartialOrderBook({
+  subscribeToPartialOrderBook({
     callback,
     params: { speed, depth, ...params },
   }: {
     callback: (
-      notification: { [x: string]: WSOrderBook[] },
+      notification: { [x: string]: WSOrderBook },
       type: NOTIFICATION_TYPE
     ) => any;
     params: {
@@ -378,7 +389,7 @@ export class MarketDataClient extends WSClientBase {
       symbols?: string[];
     };
   }): Promise<string[]> {
-    return await this.makeSubscription({
+    return this.makeSubscription({
       channel: `orderbook/${depth}/${speed}`,
       callback,
       params,
@@ -401,7 +412,7 @@ export class MarketDataClient extends WSClientBase {
    * @param {string[]} [params.symbols] Optional. A list of symbol ids
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
-  async subscribeToPartialOrderBookInBatches({
+  subscribeToPartialOrderBookInBatches({
     callback,
     params: { speed, depth, ...params },
   }: {
@@ -415,7 +426,7 @@ export class MarketDataClient extends WSClientBase {
       symbols?: string[];
     };
   }): Promise<string[]> {
-    return await this.makeSubscription({
+    return this.makeSubscription({
       channel: `orderbook/${depth}/${speed}/batch`,
       callback,
       params,
@@ -437,7 +448,7 @@ export class MarketDataClient extends WSClientBase {
    * @param {string[]} [params.symbols] Optional. A list of symbol ids
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
-  async subscribeToTopOfOrderBook({
+  subscribeToTopOfOrderBook({
     callback,
     params: { speed, ...params },
   }: {
@@ -450,7 +461,7 @@ export class MarketDataClient extends WSClientBase {
       symbols?: string[];
     };
   }): Promise<string[]> {
-    return await this.makeSubscription({
+    return this.makeSubscription({
       channel: `orderbook/top/${speed}`,
       callback,
       params,
@@ -472,7 +483,7 @@ export class MarketDataClient extends WSClientBase {
    * @param {string[]} [params.symbols] Optional. A list of symbol ids
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
-  async subscribeToTopOfOrderBookInBatches({
+  subscribeToTopOfOrderBookInBatches({
     callback,
     params: { speed, ...params },
   }: {
@@ -485,11 +496,85 @@ export class MarketDataClient extends WSClientBase {
       symbols?: string[];
     };
   }): Promise<string[]> {
-    return await this.makeSubscription({
+    return this.makeSubscription({
       channel: `orderbook/top/${speed}/batch`,
       callback,
       params,
       withDefaultSymbols: true,
+    });
+  }
+
+  /**
+   * subscribe to a feed of price rates
+   * 
+   * subscription is for all currencies or for the specified currencies
+   * 
+   * normal subscription have one update message per currency
+   * 
+   * https://api.exchange.cryptomkt.com/#subscribe-to-price-rates
+   * 
+   * @param {function} callback recieves a feed of price rates as a map of them, indexed by currency id, and the type of notification, only DATA
+   * @param {PRICE_RATE_SPEED} speed The speed of the feed. '1s' or '3s'
+   * @param {string} target_currency quote currency of the rate
+   * @param {string} currencies Optional. a list of base currencies to get rates. If omitted, subscribe to all currencies
+   * @return A promise that resolves when subscribed with a list of the successfully subscribed currencies
+   */
+  subscribeToPriceRates({
+    callback,
+    params: { speed, ...params },
+  }: {
+    callback: (
+      notification: { [x: string]: PriceRate },
+      type: NOTIFICATION_TYPE
+    ) => any;
+    params: {
+      speed: PRICE_RATE_SPEED;
+      target_currency: string,
+      currencies?: string[];
+    };
+  }): Promise<string[]> {
+    return this.makeSubscription({
+      channel: `price/rate/${speed}`,
+      callback,
+      params,
+      withDefaultCurrencies: true,
+    });
+  }
+
+  /**
+   * subscribe to a feed of price rates
+   * 
+   * subscription is for all currencies or for the specified currencies
+   * 
+   * batch subscriptions have a joined update for all currencies
+   * 
+   * https://api.exchange.cryptomkt.com/#subscribe-to-price-rates
+   * 
+   * @param {function} callback recieves a feed of price rates as a map of them, indexed by currency id, and the type of notification, only DATA
+   * @param {PRICE_RATE_SPEED} speed The speed of the feed. '1s' or '3s'
+   * @param {string} target_currency quote currency of the rate
+   * @param {string} currencies Optional. a list of base currencies to get rates. If omitted, subscribe to all currencies
+   * @return A promise that resolves when subscribed with a list of the successfully subscribed currencies
+   */
+  subscribeToPriceRatesInBatches({
+    callback,
+    params: { speed, ...params },
+  }: {
+    callback: (
+      notification: { [x: string]: PriceRate },
+      type: NOTIFICATION_TYPE
+    ) => any;
+    params: {
+      speed: PRICE_RATE_SPEED;
+      target_currency: string,
+      currencies?: string[];
+    };
+  }): Promise<string[]> {
+    return this.makeSubscription({
+      channel: `price/rate/${speed}/batch`,
+      callback,
+      params,
+      withDefaultCurrencies: true,
     });
   }
 }

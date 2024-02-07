@@ -1,16 +1,14 @@
-//@ts-ignore
-import { fail } from "assert";
-import { NOTIFICATION_TYPE } from "../../lib/constants";
+import { expect } from "chai";
 import { Client, WSWalletClient } from "../../lib/index";
 import { Balance, Transaction } from "../../lib/models";
-import { SECOND, timeout } from "../test_helpers";
-const keys = require("/home/ismael/cryptomarket/keys-v3.json");
+import { SECOND, goodBalance, goodTransaction, timeout } from "../test_helpers";
+const keys = require("/home/ismael/cryptomarket/keys.json");
 
 describe("wallet transactions", function () {
   let wsclient: WSWalletClient;
   let restClient: any;
   beforeEach(() => {
-    wsclient = new WSWalletClient(keys.apiKey, keys.apiSecret);
+    wsclient = new WSWalletClient(keys.apiKey, keys.apiSecret, undefined, 10_000);
     restClient = new Client(keys.apiKey, keys.apiSecret);
   });
 
@@ -19,66 +17,56 @@ describe("wallet transactions", function () {
   });
 
   describe("Subscribe to transactions", function () {
-    it("should succeed", async function () {
+    it("gets a feed of transactions", async function () {
       this.timeout(0);
-      try {
-        await wsclient.connect();
-        await wsclient.subscribeToTransactions(
-          (notification: Transaction[], type: NOTIFICATION_TYPE) => {
-            console.log("transaction notification");
-            console.log("type: " + type);
-            console.log(notification);
-          }
-        );
-        await restClient.transferBetweenWalletAndExchange({
-          source: "wallet",
-          destination: "spot",
-          currency: "ADA",
-          amount: 1,
-        });
-        await timeout(3 * SECOND);
-        await restClient.transferBetweenWalletAndExchange({
-          source: "spot",
-          destination: "wallet",
-          currency: "ADA",
-          amount: 1,
-        });
-        await timeout(3 * SECOND);
-      } catch (err) {
-        fail("should not fail. " + err);
-      }
+      await wsclient.connect();
+      await wsclient.subscribeToTransactions((transaction: Transaction, _) => {
+        expect(goodTransaction(transaction)).to.be.true
+      });
+      await restClient.transferBetweenWalletAndExchange({
+        source: "wallet",
+        destination: "spot",
+        currency: "USDT",
+        amount: 1,
+      });
+      await timeout(3 * SECOND);
+      await restClient.transferBetweenWalletAndExchange({
+        source: "spot",
+        destination: "wallet",
+        currency: "USDT",
+        amount: 1,
+      });
+      await timeout(3 * SECOND);
+      const unsubscriptionSuccess = await wsclient.unsubscribeToTransactions()
+      expect(unsubscriptionSuccess).to.be.true
     });
   });
 
   describe("Subscribe to balance", function () {
-    it("should succeed", async function () {
+    it("gets a feed of wallet balances", async function () {
       this.timeout(0);
-      try {
-        await wsclient.connect();
-        await wsclient.subscribeToBalance(
-          (notification: Balance[], type: NOTIFICATION_TYPE) => {
-            console.log("balance notification");
-            console.log("type: " + type);
-            console.log(notification);
-          }
-        );
-        await restClient.transferBetweenWalletAndExchange({
-          source: "wallet",
-          destination: "spot",
-          currency: "ADA",
-          amount: 1,
-        });
-        await timeout(3 * SECOND);
-        await restClient.transferBetweenWalletAndExchange({
-          source: "spot",
-          destination: "wallet",
-          currency: "ADA",
-          amount: 1,
-        });
-        await timeout(3 * SECOND);
-      } catch (err) {
-        fail("should not fail. " + err);
-      }
+      await wsclient.connect();
+      await wsclient.subscribeToBalance((balances: Balance[], _) => {
+        const allGood = balances.map(goodBalance).every(Boolean)
+        expect(allGood).to.be.true
+      });
+      await restClient.transferBetweenWalletAndExchange({
+        source: "wallet",
+        destination: "spot",
+        currency: "USDT",
+        amount: 1,
+      });
+      await timeout(3 * SECOND);
+      await restClient.transferBetweenWalletAndExchange({
+        source: "spot",
+        destination: "wallet",
+        currency: "USDT",
+        amount: 1,
+      });
+      await timeout(3 * SECOND);
+      const unsubscriptionSuccess = await wsclient.unsubscribeToBalance()
+      expect(unsubscriptionSuccess).to.be.true
+
     });
   });
 });

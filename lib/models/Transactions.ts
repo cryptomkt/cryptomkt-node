@@ -1,4 +1,5 @@
 export interface Transaction {
+  operation_id?: string; // present in websocket transaction subscription notifications
   id: number;
   status: string;
   type: string;
