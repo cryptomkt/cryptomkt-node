@@ -1,7 +1,19 @@
 export interface WSOrderBook {
+  /**
+   * timetsmap
+   */
   t: number;
+  /**
+   * sequence number
+   */
   s: number;
+  /**
+   * asks
+   */
   a: OrderBookLevel[];
+  /**
+   * bids
+   */
   b: OrderBookLevel[];
 }
 

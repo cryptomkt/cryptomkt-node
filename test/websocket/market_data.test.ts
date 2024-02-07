@@ -8,10 +8,9 @@ import {
   PRICE_RATE_SPEED,
   TICKER_SPEED,
 } from "../../lib/constants";
-import { SECOND, goodCandle, goodOrderbook, goodPriceRate, goodPublicTrade, goodTicker, goodWSCandle, goodWSOrderbook, goodWSOrderbookTop, goodWSTicker, goodWSTrade, timeout } from "../test_helpers";
-import { WSTicker } from "../../lib/models";
+import { SECOND, goodPriceRate, goodWSCandle, goodWSOrderbook, goodWSOrderbookTop, goodWSTicker, goodWSTrade, timeout } from "../test_helpers";
 
-describe.only("websocket market data client", function () {
+describe("websocket market data client", function () {
   let wsclient: WSMarketDataClient;
 
   beforeEach(() => {
