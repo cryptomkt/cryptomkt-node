@@ -89,8 +89,8 @@ export class Client {
    *
    * @return A list of available currencies
    */
-  getCurrencies(currencies?: string[], preferred_network?: string): Promise<{ [key: string]: Currency[] }> {
-    return this.get("public/currency/", { currencies });
+  getCurrencies(currencies?: string[], preferred_network?: string): Promise<{ [key: string]: Currency }> {
+    return this.get("public/currency", { currencies, preferred_network });
   }
 
   /**
@@ -120,7 +120,7 @@ export class Client {
    *
    * @return A list of symbols traded on the exchange
    */
-  getSymbols(symbols?: string[]): Promise<{ [key: string]: Symbol[] }> {
+  getSymbols(symbols?: string[]): Promise<{ [key: string]: Symbol }> {
     return this.get("public/symbol/", { symbols });
   }
 
@@ -152,7 +152,7 @@ export class Client {
    *
    * @returns An object/dict with symbols ids as keys.
    */
-  getTickers(symbols?: string[]): Promise<{ [key: string]: Ticker[] }> {
+  getTickers(symbols?: string[]): Promise<{ [key: string]: Ticker }> {
     return this.get("public/ticker/", { symbols });
   }
 
@@ -187,7 +187,7 @@ export class Client {
   getPrices(params: {
     to: string;
     from?: string;
-  }): Promise<{ [key: string]: Price[] }> {
+  }): Promise<{ [key: string]: Price }> {
     return this.get(`public/price/rate`, params);
   }
 

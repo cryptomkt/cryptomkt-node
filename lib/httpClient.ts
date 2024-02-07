@@ -24,6 +24,7 @@ export class HttpClient {
     publc: boolean = false
   ): Promise<any> {
     const { url, opts } = this.prepareRequest(params, method, publc, endpoint);
+    console.log(opts)
     try {
       return await this.makeFetch(url, opts);
     } catch (e) {
@@ -33,9 +34,12 @@ export class HttpClient {
 
 
   private prepareRequest(params_raw: any, method: HTTP_METHOD, publicMethod: boolean, endpoint: string): { url: URL, opts: Map<string, string> } {
+    if (params_raw === undefined || params_raw === null) {
+      params_raw = {}
+    }
     let url = new URL(this.apiPath + endpoint);
+    this.removeNulls(params_raw);
     const params: [string, string][] = Object.entries(params_raw)
-      .filter(([k, v]) => v !== null)
       .map(([k, v]) => [k, String(v)])
     let rawQuery = new URLSearchParams(params);
     rawQuery.sort();
@@ -53,15 +57,23 @@ export class HttpClient {
       opts.headers["Content-Type"] = "application/json";
       credentialParams = JSON.stringify(params_raw)
     }
+    if (method === HTTP_METHOD.PATCH) {
+      opts.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    }
     // add auth header if not public endpoint
     if (!publicMethod)
       opts.headers["Authorization"] = this.hmac.buildCredential(method, url, credentialParams);
     // include query params to call
     if (method === HTTP_METHOD.GET || method === HTTP_METHOD.PUT)
       url.search = query;
-    else
+    else {
       opts.body = credentialParams;
+    }
     return { url, opts };
+  }
+
+  private removeNulls(params_raw: any) {
+    Object.keys(params_raw).forEach(key => (params_raw[key] === undefined || params_raw[key] == null) ? delete params_raw[key] : {});
   }
 
   private async makeFetch(url: URL, opts: any): Promise<any> {
