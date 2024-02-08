@@ -548,7 +548,7 @@ export class MarketDataClient extends WSClientBase {
    * 
    * batch subscriptions have a joined update for all currencies
    * 
-   * https://api.exchange.cryptomkt.com/#subscribe-to-price-rates
+   * https://api.exchange.cryptomkt.com/#subscribe-to-price-rates-in-batches
    * 
    * @param {function} callback recieves a feed of price rates as a map of them, indexed by currency id, and the type of notification, only DATA
    * @param {PRICE_RATE_SPEED} speed The speed of the feed. '1s' or '3s'

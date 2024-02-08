@@ -218,32 +218,32 @@ export class TradingClient extends AuthClient {
    * @param {string} params.currency The currency code to query the balance
    * @return A promise that resolves with the spot trading balance of a currency
    */
-  async getSpotTradingBalanceOfCurrency(params: {
+  async getSpotTradingBalance(params: {
     currency: string;
   }): Promise<Balance> {
     return this.makeRequest<Balance>({ method: "spot_balance", params });
   }
 
   /**
-   * Get the personal trading commission rates for all symbols
+   * Get the personal trading fee rates for all symbols
    *
    * https://api.exchange.cryptomkt.com/#get-spot-fees
    *
    * @return A promise that resolves with a list of commission rates
    */
-  async getSpotCommissions(): Promise<Commission[]> {
+  async getSpotFees(): Promise<Commission[]> {
     return this.makeRequest<Commission[]>({ method: "spot_fees" });
   }
 
   /**
-   * Get the personal trading commission rate of a symbol
+   * Get the personal trading fee rate of a symbol
    *
    * https://api.exchange.cryptomkt.com/#get-spot-fee
    *
    * @param {string} params.symbol The symbol of the commission rate
    * @return A promise that resolves with the commission rate of a symbol
    */
-  async getSpotCommissionOfSymbol(params: {
+  async getSpotFee(params: {
     symbol: string;
   }): Promise<Commission> {
     return this.makeRequest<Commission>({ method: "spot_fee", params });

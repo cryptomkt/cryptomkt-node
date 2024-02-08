@@ -42,7 +42,7 @@ export class WalletClient extends AuthClient {
    *
    * Requires the "Payment information" API key Access Right
    *
-   * https://api.exchange.cryptomkt.com/#wallet-balance
+   * https://api.exchange.cryptomkt.com/#request-wallet-balance
    *
    * @return A promise that resolves with a list of wallet balances
    */
@@ -55,12 +55,12 @@ export class WalletClient extends AuthClient {
    *
    * Requires the "Payment information" API key Access Right
    *
-   * https://api.exchange.cryptomkt.com/#wallet-balance
+   * https://api.exchange.cryptomkt.com/#request-wallet-balance
    *
    * @param {string} currency The currency code to query the balance
    * @return A promise that resolves with the wallet balance of the currency
    */
-  async getWalletBalanceOfCurrency(currency: string): Promise<Balance> {
+  async getWalletBalance(currency: string): Promise<Balance> {
     const response = await this.makeRequest<Balance>({ method: "wallet_balance", params: { currency } });
     return { available: response.available, reserved: response.reserved, currency: currency };
   }
@@ -78,7 +78,7 @@ export class WalletClient extends AuthClient {
    *
    * Requires the "Payment information" API key Access Right
    *
-   * https://api.exchange.cryptomkt.com/#get-transactions-history
+   * https://api.exchange.cryptomkt.com/#get-transactions
    *
    * @param {string[]} [params.tx_ids] Optional. List of transaction identifiers to query
    * @param {TRANSACTION_TYPE[]} [params.transaction_types] Optional. List of types to query. valid types are: 'DEPOSIT', 'WITHDRAW', 'TRANSFER' and 'SWAP'
@@ -92,6 +92,7 @@ export class WalletClient extends AuthClient {
    * @param {SORT} [params.sort] Optional. Sort direction. 'ASC' or 'DESC'. Default is 'DESC'
    * @param {number} [params.limit] Optional. Transactions per query. Defaul is 100. Max is 1000
    * @param {number} [params.offset] Optional. Default is 0. Max is 100000
+   * @param {Boolean} [params.group_transactions] Flag indicating whether the returned transactions will be parts of a single operation. Default is false
    * @return A promise that resolves with a list of transactions
    */
   getTransactions(params: {
@@ -108,6 +109,7 @@ export class WalletClient extends AuthClient {
     sort?: SORT;
     limit?: number;
     offset?: number;
+    group_transactions?: Boolean;
   }): Promise<Transaction[]> {
     const clean_params: any = { ...params }
     clean_params.currencies = params.currencies?.join(", ")
@@ -142,7 +144,7 @@ export class WalletClient extends AuthClient {
   /**
    * unsubscribe to the transaction feed.
    *
-   * https://api.exchange.cryptomkt.com/#subscription-to-the-transactions
+   * https://api.exchange.cryptomkt.com/#subscribe-to-transactions
    *
    * @return {Promise<Boolean>} A Promise of the unsubscription result. True if unsubscribed
    */
@@ -158,7 +160,7 @@ export class WalletClient extends AuthClient {
    * the first notification has a snapshot of the wallet. further notifications
    * are updates of the wallet
    *
-   * https://api.exchange.cryptomkt.com/#subscription-to-the-balance
+   * https://api.exchange.cryptomkt.com/#subscribe-to-wallet-balances
    *
    * @param {function} callback A function that recieves notifications with a list of balances, and the type of notification (either SNAPSHOT or UPDATE)
    * @return {Promise<Boolean>} A Promise of the subscription result. True if subscribed
@@ -185,7 +187,7 @@ export class WalletClient extends AuthClient {
   /**
    * unsubscribe to the balance feed.
    *
-   * https://api.exchange.cryptomkt.com/#subscription-to-the-balance
+   * https://api.exchange.cryptomkt.com/#subscribe-to-wallet-balances
    *
    * @return {Promise<Boolean>} A Promise of the unsubscription result. True if unsubscribed
    */
