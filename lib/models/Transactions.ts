@@ -7,12 +7,12 @@ export interface Transaction {
   created_at: string;
   updated_at: string;
   native: NativeTransaction;
-  primetrust: any;
-  meta: MetaTransaction;
+  commit_risk: CommitRisk;
 }
 
 export interface NativeTransaction {
   tx_id: string;
+  wallet_id: string;
   index: number;
   currency: string;
   amount: number;
@@ -23,23 +23,13 @@ export interface NativeTransaction {
   offchain_id: string;
   confirmations: number;
   public_comment: string;
+  error_code: string;
   senders: string[];
+  operation_type: string;
 }
 
-export interface MetaTransaction {
-  fiat_to_crypto: JSON;
-  id: number;
-  provider_name: string;
-  order_type: string;
-  source_currency: string;
-  target_currency: string;
-  wallet_address: string;
-  tx_hash: string;
-  target_amount: string;
-  source_amount: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
-  payment_method_type: string;
+export interface CommitRisk {
+  score: number;
+  rbf: Boolean;
+  low_fee: Boolean;
 }

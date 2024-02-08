@@ -46,14 +46,14 @@ describe("wallet management", () => {
   describe("Get deposit crypto address of symbol", () => {
     it("", async function () {
       this.timeout(0);
-      let address = await client.getDepositCryptoAddressOfCurrency("EOS");
+      let address = await client.getDepositCryptoAddress("EOS");
       assert(goodAddress(address), "not good address");
     });
   });
   describe("create deposit crypto address", () => {
     it("", async function () {
       this.timeout(0);
-      let oldAddress = await client.getDepositCryptoAddressOfCurrency("EOS");
+      let oldAddress = await client.getDepositCryptoAddress("EOS");
       let newAddres = await client.createDepositCryptoAddress("EOS");
       assert(oldAddress.address !== newAddres.address, "not a new address");
       assert(goodAddress(newAddres), "not good address");
@@ -78,7 +78,7 @@ describe("wallet management", () => {
   describe("withdraw crypto and commitment/rollback", () => {
     it("exception amount too low", async function () {
       this.timeout(0);
-      let adaAddress = await client.getDepositCryptoAddressOfCurrency("ADA");
+      let adaAddress = await client.getDepositCryptoAddress("ADA");
       try {
         let transactionID = await client.withdrawCrypto({
           currency: "ADA",
@@ -94,7 +94,7 @@ describe("wallet management", () => {
     });
     it("with auto commit (default mode)", async function () {
       this.timeout(0);
-      let adaAddress = await client.getDepositCryptoAddressOfCurrency("ADA");
+      let adaAddress = await client.getDepositCryptoAddress("ADA");
       let transactionID = await client.withdrawCrypto({
         currency: "ADA",
         amount: "0.1",
@@ -104,7 +104,7 @@ describe("wallet management", () => {
     });
     it("with commit", async function () {
       this.timeout(0);
-      let adaAddress = await client.getDepositCryptoAddressOfCurrency("ADA");
+      let adaAddress = await client.getDepositCryptoAddress("ADA");
       let transactionID = await client.withdrawCrypto({
         currency: "ADA",
         amount: "0.1",
@@ -117,7 +117,7 @@ describe("wallet management", () => {
     });
     it("with rollback", async function () {
       this.timeout(0);
-      let adaAddress = await client.getDepositCryptoAddressOfCurrency("ADA");
+      let adaAddress = await client.getDepositCryptoAddress("ADA");
       let transactionID = await client.withdrawCrypto({
         currency: "ADA",
         amount: "0.1",
@@ -152,7 +152,7 @@ describe("wallet management", () => {
   describe("check if crypto address belongs to current account", () => {
     it("cro belongs", async function () {
       this.timeout(0);
-      let croAddress = await client.getDepositCryptoAddressOfCurrency("CRO");
+      let croAddress = await client.getDepositCryptoAddress("CRO");
       let result = await client.checkIfCryptoAddressBelongsToCurrentAccount(
         croAddress.address
       );
@@ -160,7 +160,7 @@ describe("wallet management", () => {
     });
     it.skip("eos belongs", async function () {
       this.timeout(0);
-      let eosAddress = await client.getDepositCryptoAddressOfCurrency("EOS");
+      let eosAddress = await client.getDepositCryptoAddress("EOS");
       let result = await client.checkIfCryptoAddressBelongsToCurrentAccount(
         eosAddress.address
       );
@@ -208,7 +208,7 @@ describe("wallet management", () => {
   describe("get transaction history", () => {
     it("", async function () {
       this.timeout(0);
-      let transactions = await client.getTransactionHistory();
+      let transactions = await client.getTransactionHistory({ currencies: ["CRO", "ETH"] });
       assert(goodList(goodTransaction, transactions), "not good transaction");
     });
   });
@@ -221,7 +221,7 @@ describe("wallet management", () => {
   describe("check if offchain is available", () => {
     it("", async function () {
       this.timeout(0);
-      let myEOSAddress = await client.getDepositCryptoAddressOfCurrency("EOS");
+      let myEOSAddress = await client.getDepositCryptoAddress("EOS");
       let result = await client.checkIfOffchainIsAvailable({
         currency: "EOS",
         address: myEOSAddress.address,

@@ -91,7 +91,6 @@ export class Client {
    */
   async getCurrencies(currencies?: string[], preferred_network?: string): Promise<{ [key: string]: Currency }> {
     const response = await this.get("public/currency", { currencies, preferred_network });
-    console.log(response)
     return response
   }
 
@@ -799,9 +798,9 @@ export class Client {
   /**
    * Get the current addresses of the user
    *
-   * Requires the "Payment information" API key Access Right.
+   * Requires the "Payment information" API key AccesrkRight.
    *
-   * https://api.exchange.cryptomkt.com/#deposit-crypto-address
+   *, network_code https://api.exchange.cryptomkt.com/#deposit-crypto-address
    *
    * @return A list of currency addresses
    */
@@ -859,11 +858,12 @@ export class Client {
    * https://api.exchange.cryptomkt.com/#last-10-deposit-crypto-address
    *
    * @param {string} currency currency to get the list of addresses
+   * @param {string} [network_code] Optional. network code 
    *
    * @return A list of addresses
    */
-  getLast10DepositCryptoAddresses(currency: string): Promise<Address[]> {
-    return this.get(`wallet/crypto/address/recent-deposit`, { currency });
+  getLast10DepositCryptoAddresses(currency: string, network_code?: string): Promise<Address[]> {
+    return this.get(`wallet/crypto/address/recent-deposit`, { currency, network_code });
   }
 
   /**
@@ -876,11 +876,12 @@ export class Client {
    * https://api.exchange.cryptomkt.com/#last-10-withdrawal-crypto-addresses
    *
    * @param {string} currency currency to get the list of addresses
+   * @param {string} [network_code] Optional. network code 
    *
    * @return A list of addresses
    */
-  getLast10WithdrawalCryptoAddresses(currency: string): Promise<Address[]> {
-    return this.get(`wallet/crypto/address/recent-withdraw`, { currency });
+  getLast10WithdrawalCryptoAddresses(currency: string, network_code?: string): Promise<Address[]> {
+    return this.get(`wallet/crypto/address/recent-withdraw`, { currency, network_code });
   }
 
   /**
@@ -903,6 +904,7 @@ export class Client {
    * @param {string} params.currency currency code of the crypto to withdraw
    * @param {string} params.amount the amount to be sent to the specified address
    * @param {string} params.address the address identifier
+   * @param {string} [params.network_code] Optional. network code 
    * @param {string} [params.payment_id] Optional.
    * @param {boolean} [params.include_fee] Optional. If true then the total spent amount includes fees. Default false
    * @param {boolean} [params.auto_commit] Optional. If false then you should commit or rollback transaction in an hour. Used in two phase commit schema. Default true
@@ -916,6 +918,7 @@ Accepted values: never, optionally, required
     currency: string;
     amount: string;
     address: string;
+    network_code?: string
     paymend_id?: string;
     include_fee?: boolean;
     auto_commit?: boolean;
@@ -1112,6 +1115,8 @@ Accepted values: wallet, spot. Must not be the same as source
    * @param {TRANSACTION_TYPE[]} [params.types] Optional. List of types to query. valid types are: 'DEPOSIT', 'WITHDRAW', 'TRANSFER' and 'SWAP'
    * @param {TRANSACTION_SUBTYPE[]} [params.subtypes] Optional. List of subtypes to query. valid subtypes are: 'UNCLASSIFIED', 'BLOCKCHAIN', 'AIRDROP', 'AFFILIATE', 'STAKING', 'BUY_CRYPTO', 'OFFCHAIN', 'FIAT', 'SUB_ACCOUNT', 'WALLET_TO_SPOT', 'SPOT_TO_WALLET', 'WALLET_TO_DERIVATIVES', 'DERIVATIVES_TO_WALLET', 'CHAIN_SWITCH_FROM', 'CHAIN_SWITCH_TO' and 'INSTANT_EXCHANGE'
    * @param {TRANSACTION_STATUS[]} [params.statuses] Optional. List of statuses to query. valid subtypes are: 'CREATED', 'PENDING', 'FAILED', 'SUCCESS' and 'ROLLED_BACK'
+   * @param {string[]} [params.currencies] Optional. List of currencies of the transactions
+   * @param {string[]} [params.networks] Optional. List of network codes
    * @param {SORT_BY} [params.order_by] Optional. Defines the sorting type.'created_at' or 'id'. Default is 'created_at'
    * @param {string} [params.from] Optional. Interval initial value when ordering by 'created_at'. As Datetime
    * @param {string} [params.till] Optional. Interval end value when ordering by 'created_at'. As Datetime
@@ -1120,6 +1125,7 @@ Accepted values: wallet, spot. Must not be the same as source
    * @param {string} [params.sort] Optional. Sort direction. 'ASC' or 'DESC'. Default is 'DESC'.
    * @param {number} [params.limit] Optional. Transactions per query. Defaul is 100. Max is 1000
    * @param {number} [params.offset] Optional. Default is 0. Max is 100000
+   * @param {Boolean} [params.group_transactions] Optional. Flag indicating whether the returned transactions will be parts of a single operation
    *
    * @return A list of transactions
    */
@@ -1128,14 +1134,17 @@ Accepted values: wallet, spot. Must not be the same as source
     types?: TRANSACTION_TYPE[];
     subtypes?: TRANSACTION_SUBTYPE[];
     statuses?: TRANSACTION_STATUS[];
-    order_by: SORT_BY;
-    from: string;
+    currencies?: string[],
+    networks?: string[],
+    order_by?: SORT_BY;
+    from?: string;
     till?: string;
     id_from?: string;
     id_till?: string;
     sort?: string;
     limit?: number;
     offset?: number;
+    group_transactions?:Boolean
   }): Promise<Transaction[]> {
     return this.get("wallet/transactions", params);
   }
