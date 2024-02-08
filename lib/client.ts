@@ -210,7 +210,7 @@ export class Client {
    *
    * @returns An object/dict of quotation prices of currencies, indexed by source currency code.
    */
-  getPricesHistory(params?: {
+  getPriceHistory(params?: {
     from?: string;
     to?: string;
     until?: string;
@@ -246,7 +246,7 @@ export class Client {
    * @param {string} symbol A symbol id.
    * @returns The ticker's last price of a symbol.
    */
-  getTickerLastPriceOfSymbol(symbol: string): Promise<Ticker> {
+  getTickerLastPrice(symbol: string): Promise<Ticker> {
     return this.get(`public/price/ticker/${symbol}`);
   }
 
@@ -300,7 +300,7 @@ export class Client {
    *
    * @return A list of trades of the symbol
    */
-  getTradesOfSymbol(
+  getTradesBySymbol(
     symbol: string,
     params?: {
       sort?: SORT;
@@ -350,7 +350,7 @@ export class Client {
    *
    * @return The order book of the symbol
    */
-  getOrderBookOfSymbol(symbol: string, depth?: number): Promise<OrderBook> {
+  getOrderBook(symbol: string, depth?: number): Promise<OrderBook> {
     return this.get(`public/orderbook/${symbol}`, { depth });
   }
 
@@ -433,7 +433,7 @@ export class Client {
    *
    * @return A list of candles of a symbol
    */
-  getCandlesOfSymbol(
+  getCandlesBySymbol(
     symbol: string,
     params?: {
       period?: PERIOD;
@@ -479,7 +479,7 @@ export class Client {
    *
    * @return the spot trading balance of a currency.
    */
-  async getSpotTradingBalanceOfCurrency(currency: string): Promise<Balance> {
+  async getSpotTradingBalance(currency: string): Promise<Balance> {
     const balance = await this.get(`spot/balance/${currency}`);
     balance.currency = currency;
     return balance;
@@ -774,7 +774,7 @@ export class Client {
    *
    * @return A list of wallet balances
    */
-  getWalletBalance(): Promise<Balance[]> {
+  getWalletBalances(): Promise<Balance[]> {
     return this.get("wallet/balance");
   }
 
@@ -789,7 +789,7 @@ export class Client {
    *
    * @return The wallet balance of the currency
    */
-  async getWalletBalanceOfCurrency(currency: string): Promise<Balance> {
+  async getWalletBalance(currency: string): Promise<Balance> {
     let balance = await this.get(`wallet/balance/${currency}`);
     balance.currency = currency;
     return balance;
@@ -977,7 +977,7 @@ Accepted values: never, optionally, required
   }
 
   /**
-   * Get an estimate of the withdrawal fee
+   * Get an estimate of a withdrawal fee
    *
    * Requires the "Payment information" API key Access Right.
    *

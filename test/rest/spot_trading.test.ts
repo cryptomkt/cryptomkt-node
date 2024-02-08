@@ -34,7 +34,7 @@ describe("spot trading", () => {
   describe("get spot trading balance of currency", () => {
     it("", async function () {
       this.timeout(0);
-      let balance = await client.getSpotTradingBalanceOfCurrency("ADA");
+      let balance = await client.getSpotTradingBalance("ADA");
       assert(goodBalance(balance), "not good balance");
     });
   });

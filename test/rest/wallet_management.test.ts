@@ -11,6 +11,7 @@ import {
   goodList,
   goodTransaction,
 } from "../test_helpers";
+import { Address } from "../../lib/models";
 const keys = require("/home/ismael/cryptomarket/keys.json");
 
 describe("wallet management", () => {
@@ -25,14 +26,14 @@ describe("wallet management", () => {
   describe("Get wallet balance", () => {
     it("", async function () {
       this.timeout(0);
-      let balances = await client.getWalletBalance();
+      let balances = await client.getWalletBalances();
       assert(goodList(goodBalance, balances), "not good balance");
     });
   });
   describe("get wallet balance of currency", () => {
     it("", async function () {
       this.timeout(0);
-      let balance = await client.getWalletBalanceOfCurrency("ADA");
+      let balance = await client.getWalletBalance("ADA");
       assert(goodBalance(balance), "not good balance");
     });
   });
@@ -55,7 +56,7 @@ describe("wallet management", () => {
       this.timeout(0);
       let oldAddress = await client.getDepositCryptoAddress("EOS");
       let newAddres = await client.createDepositCryptoAddress("EOS");
-      assert(oldAddress.address !== newAddres.address, "not a new address");
+      assert(!sameAddress(oldAddress, newAddres), "not a new address");
       assert(goodAddress(newAddres), "not good address");
     });
   });
@@ -178,7 +179,7 @@ describe("wallet management", () => {
     it("", async function () {
       this.timeout(0);
       // original wallet amount
-      let startingADAInWallet = await client.getWalletBalanceOfCurrency("ADA");
+      let startingADAInWallet = await client.getWalletBalance("ADA");
       // transfer to spot
       let transactionID = await client.transferBetweenWalletAndExchange({
         source: ACCOUNT.WALLET,
@@ -198,7 +199,7 @@ describe("wallet management", () => {
       assert(transactionID !== "", "not good identifier of transfer to wallet");
 
       // end wallet amount
-      let endADAInWallet = await client.getWalletBalanceOfCurrency("ADA");
+      let endADAInWallet = await client.getWalletBalance("ADA");
       assert(
         startingADAInWallet.available === endADAInWallet.available,
         "not good tranfer"
@@ -238,3 +239,8 @@ describe("wallet management", () => {
     });
   });
 });
+function sameAddress(oldAddress: Address, newAddres: Address) {
+  return oldAddress.address === newAddres.address && oldAddress.currency && newAddres.currency
+    && oldAddress.payment_id === newAddres.payment_id && oldAddress.public_key === oldAddress.public_key
+}
+

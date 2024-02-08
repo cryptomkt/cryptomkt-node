@@ -108,7 +108,7 @@ describe("Rest client test", () => {
   describe("Get Prices History", () => {
     it("for all currencies as origin", async function () {
       this.timeout(0);
-      let pricesHistory = await client.getPricesHistory({
+      let pricesHistory = await client.getPriceHistory({
         to: "ETH",
         period: PERIOD._15_MINUTES,
       });
@@ -120,7 +120,7 @@ describe("Rest client test", () => {
     });
     it("for one currency pair", async function () {
       this.timeout(0);
-      let pricesHistory = await client.getPricesHistory({
+      let pricesHistory = await client.getPriceHistory({
         to: "ETH",
         from: "BTC",
         period: PERIOD._15_MINUTES,
@@ -149,7 +149,7 @@ describe("Rest client test", () => {
   describe("Get Ticker Price Of Symbol", () => {
     it("", async function () {
       this.timeout(0);
-      let price = await client.getTickerLastPriceOfSymbol("EOSETH");
+      let price = await client.getTickerLastPrice("EOSETH");
       assert(goodTickerPrice(price), "not a good ticker price");
     });
   });
@@ -179,7 +179,7 @@ describe("Rest client test", () => {
   describe("Get Trades of symbol", () => {
     it("", async function () {
       this.timeout(0);
-      let trades = await client.getTradesOfSymbol("EOSETH");
+      let trades = await client.getTradesBySymbol("EOSETH");
       assert(!emptyList(trades), "empty dict of trades");
       assert(goodList(goodPublicTrade, trades), "not good trades");
     });
@@ -202,7 +202,7 @@ describe("Rest client test", () => {
   describe("Get Order book of symbol", () => {
     it("", async function () {
       this.timeout(0);
-      let orderBook = await client.getOrderBookOfSymbol("EOSETH");
+      let orderBook = await client.getOrderBook("EOSETH");
       assert(goodOrderbook(orderBook), "not good orderbook");
     });
   });
@@ -243,7 +243,7 @@ describe("Rest client test", () => {
   describe("Get candles Of Symbol", () => {
     it("with period and limit", async function () {
       this.timeout(0);
-      let candles = await client.getCandlesOfSymbol("ADAETH", {
+      let candles = await client.getCandlesBySymbol("ADAETH", {
         period: PERIOD._30_MINUTES,
         limit: 2,
       });
