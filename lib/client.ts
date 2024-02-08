@@ -820,7 +820,7 @@ export class Client {
    *
    * @return the currency address
    */
-  async getDepositCryptoAddressOfCurrency(currency: string): Promise<Address> {
+  async getDepositCryptoAddress(currency: string, network_code?: string): Promise<Address> {
     const addressList = await this.get(`wallet/crypto/address`, { currency });
     return addressList[0];
   }
@@ -828,16 +828,25 @@ export class Client {
   /**
    * Creates a new address for the currency
    *
+   * Creates a new deposit address. 
+   * Existing addresses may still receive funds. 
+   * For some tokens (e.g., Ethereum tokens), 
+   * a single address is generated per base currency with additional 
+   * identifiers which differ for each address: payment_id or public_key. 
+   * As a result, generating a new address for such a token 
+   * will change the current address for an entire base currency accordingly.
+   * 
    * Requires the "Payment information" API key Access Right.
    *
    * https://api.exchange.cryptomkt.com/#generate-deposit-crypto-address
    *
    * @param {string} currency currency to create a new address
+   * @param {string} network_code Optional. network code 
    *
    * @return The created address for the currency
    */
   createDepositCryptoAddress(currency: string, network_code?: string): Promise<Address> {
-    return this.post(`wallet/crypto/address`, { currency });
+    return this.post(`wallet/crypto/address`, { currency, network_code });
   }
 
   /**

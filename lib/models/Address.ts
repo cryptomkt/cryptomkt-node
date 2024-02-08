@@ -3,4 +3,5 @@ export interface Address {
   currency: string;
   payment_id: string;
   public_key: string;
+  netwokd_code: string;
 }
