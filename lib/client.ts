@@ -505,7 +505,7 @@ export class Client {
    *
    * Requires the "Place/cancel orders" API key Access Right.
    *
-   * https://api.exchange.cryptomkt.com/#get-active-spot-orders
+   * https://api.exchange.cryptomkt.com/#get-active-spot-order
    *
    * @param {string} client_order_id The clientOrderId of the order
    *
@@ -669,7 +669,7 @@ export class Client {
    *
    * Requires the "Place/cancel orders" API key Access Right.
    *
-   * https://api.exchange.cryptomkt.com/#get-all-trading-commission
+   * https://api.exchange.cryptomkt.com/#get-all-trading-commissions
    *
    * @return A list of commission rates
    */
@@ -800,7 +800,7 @@ export class Client {
    *
    * Requires the "Payment information" API key AccesrkRight.
    *
-   *, network_code https://api.exchange.cryptomkt.com/#deposit-crypto-address
+   * https://api.exchange.cryptomkt.com/#get-deposit-crypto-address
    *
    * @return A list of currency addresses
    */
@@ -813,7 +813,7 @@ export class Client {
    *
    * Requires the "Payment information" API key Access Right.
    *
-   * https://api.exchange.cryptomkt.com/#deposit-crypto-address
+   * https://api.exchange.cryptomkt.com/#get-deposit-crypto-address
    *
    * @param {string} currency currency to get the address
    *
@@ -855,7 +855,7 @@ export class Client {
    *
    * Requires the "Payment information" API key Access Right.
    *
-   * https://api.exchange.cryptomkt.com/#last-10-deposit-crypto-address
+   * https://api.exchange.cryptomkt.com/#last-10-deposit-crypto-addresses
    *
    * @param {string} currency currency to get the list of addresses
    * @param {string} [network_code] Optional. network code 
@@ -966,13 +966,13 @@ Accepted values: never, optionally, required
    *
    * Requires the "Payment information" API key Access Right.
    *
-   * https://api.exchange.cryptomkt.com/#get-spot-fees
+   * https://api.exchange.cryptomkt.com/#estimate-withdrawal-fees
    *
    * @param {FeeRequest[]} feeRequests A list of fee requests
    *
    * @return The list of requested fees
    */
-  async getEstimateWithdrawFees(feeRequests: FeeRequest[]): Promise<Fee[]> {
+  async getEstimateWithdrawalFees(feeRequests: FeeRequest[]): Promise<Fee[]> {
     return this.post("wallet/crypto/fees/estimate", feeRequests);
   }
 
@@ -981,7 +981,7 @@ Accepted values: never, optionally, required
    *
    * Requires the "Payment information" API key Access Right.
    *
-   * https://api.exchange.cryptomkt.com/#estimate-withdraw-fee
+   * https://api.exchange.cryptomkt.com/#estimate-withdrawal-fee
    *
    * @param {object} params
    * @param {string} params.currency the currency code for withdraw
@@ -990,7 +990,7 @@ Accepted values: never, optionally, required
    *
    * @return The expected fee
    */
-  async getEstimateWithdrawFee(params: {
+  async getEstimateWithdrawalFee(params: {
     currency: string;
     amount: string;
     network_code?: string;
