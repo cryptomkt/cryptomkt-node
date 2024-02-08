@@ -28,9 +28,7 @@ describe("TradingClient", () => {
     it("gets only one", async function () {
       this.timeout(0);
       await wsclient.connect();
-      const balance = await wsclient.getSpotTradingBalanceOfCurrency({
-        currency: "EOS",
-      });
+      const balance = await wsclient.getSpotTradingBalance("EOS");
       expect(goodBalance(balance)).to.be.true
     });
   });
@@ -94,7 +92,7 @@ describe("TradingClient", () => {
     it("gets a commission list", async function () {
       this.timeout(0);
       await wsclient.connect();
-      const commissions = await wsclient.getSpotCommissions();
+      const commissions = await wsclient.getSpotFees();
       expect(commissions.length).to.be.greaterThanOrEqual(1);
       const allGood = commissions.map(goodTradingCommission).every(Boolean)
       expect(allGood).to.be.true
@@ -103,9 +101,7 @@ describe("TradingClient", () => {
     it("gets only one", async function () {
       this.timeout(0);
       await wsclient.connect();
-      const commission = await wsclient.getSpotCommissionOfSymbol({
-        symbol: "EOSETH",
-      });
+      const commission = await wsclient.getSpotFee("EOSETH");
       expect(goodTradingCommission(commission)).to.be.true
     });
   });

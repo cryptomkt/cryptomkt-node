@@ -26,7 +26,7 @@ describe("WalletClient", function () {
     it("gets only one balance", async function () {
       this.timeout(0);
       await wsclient.connect();
-      const balance = await wsclient.getWalletBalanceOfCurrency("EOS");
+      const balance = await wsclient.getWalletBalance("EOS");
       expect(goodBalance(balance)).to.be.true
     });
   });
