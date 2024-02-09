@@ -1,35 +1,35 @@
 export interface Transaction {
-  operation_id?: string; // present in websocket transaction subscription notifications
+  operationId?: string; // present in websocket transaction subscription notifications
   id: number;
   status: string;
   type: string;
   subtype: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   native: NativeTransaction;
-  commit_risk: CommitRisk;
+  commitRisk: CommitRisk;
 }
 
 export interface NativeTransaction {
-  tx_id: string;
-  wallet_id: string;
+  txId: string;
+  walletId: string;
   index: number;
   currency: string;
   amount: number;
   fee: number;
   address: string;
-  payment_id: string;
+  paymentId: string;
   hash: string;
-  offchain_id: string;
+  offchainId: string;
   confirmations: number;
-  public_comment: string;
-  error_code: string;
+  publicComment: string;
+  errorCode: string;
   senders: string[];
-  operation_type: string;
+  operationType: string;
 }
 
 export interface CommitRisk {
   score: number;
   rbf: Boolean;
-  low_fee: Boolean;
+  lowFee: Boolean;
 }

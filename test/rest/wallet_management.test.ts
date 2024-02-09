@@ -133,7 +133,7 @@ describe("wallet management", () => {
   describe("get estimate withdrawal fee", () => {
     it("", async function () {
       this.timeout(0);
-      let fee = await client.getEstimateWithdrawFee({
+      let fee = await client.getEstimateWithdrawalFee({
         currency: "CRO",
         amount: "100",
       });
@@ -143,7 +143,7 @@ describe("wallet management", () => {
   describe("get estimates withdrawal fees", () => {
     it("", async function () {
       this.timeout(0);
-      let fees = await client.getEstimateWithdrawFees([
+      let fees = await client.getEstimateWithdrawalFees([
         { currency: "CRO", amount: "100" },
         { currency: "EOS", amount: "12" }
       ]);

@@ -1,19 +1,19 @@
 import { Network } from "./Network";
 
 export interface Currency {
-  full_name: string;
+  fullName: string;
   crypto: boolean;
-  payin_enabled: boolean;
-  payout_enabled: boolean;
-  transfer_enabled: boolean;
-  precision_transfer: string;
+  payinEnabled: boolean;
+  payoutEnabled: boolean;
+  transferEnabled: boolean;
+  precisionTransfer: string;
   sign: string;
-  crypto_payment_id_name: string;
-  crypto_explorer: string;
-  account_top_order: number;
-  qr_prefix: string;
+  cryptoPaymentIdName: string;
+  cryptoExplorer: string;
+  accountTopOrder: number;
+  qrPrefix: string;
   delisted: boolean;
-  contract_address: string;
+  contractAddress: string;
   networks: Network[];
 }
 

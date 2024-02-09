@@ -8,38 +8,38 @@ import {
 
 export interface Order {
   id: number;
-  client_order_id: string;
+  clientOrderId: string;
   symbol: string;
   side: SIDE;
   status: ORDER_STATUS;
   type: ORDER_TYPE;
-  time_in_force: TIME_IN_FORCE;
+  timeInForce: TIME_IN_FORCE;
   quantity: string;
   price: string;
-  quantity_cumulative: string;
-  created_at: string;
-  updated_at: string;
-  expire_time: string;
-  stop_price: string;
-  post_only: boolean;
+  quantityCumulative: string;
+  createdAt: string;
+  updatedAt: string;
+  expireTime: string;
+  stopPrice: string;
+  postOnly: boolean;
   trades: string;
-  original_client_order_id: string;
-  order_list_id: string;
-  contingency_type: CONTINGENCY;
+  originalClientOrderId: string;
+  orderListId: string;
+  contingencyType: CONTINGENCY;
 }
 
 export interface OrderRequest {
   symbol: string;
   side: SIDE;
   quantity: string;
-  client_order_id?: string;
+  clientOrderId?: string;
   type?: ORDER_TYPE;
-  time_in_force?: TIME_IN_FORCE;
+  timeInForce?: TIME_IN_FORCE;
   price?: string;
-  stop_price?: string;
-  expire_time?: string;
-  strict_validate?: boolean;
-  post_only?: boolean;
-  take_rate?: string;
-  make_rate?: string;
+  stopPrice?: string;
+  expireTime?: string;
+  strictValidate?: boolean;
+  postOnly?: boolean;
+  takeRate?: string;
+  makeRate?: string;
 }

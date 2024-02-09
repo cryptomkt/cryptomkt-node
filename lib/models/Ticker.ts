@@ -7,5 +7,5 @@ export interface Ticker {
   high: string;
   low: string;
   volume: string;
-  volume_quote: string;
+  volumeQuote: string;
 }

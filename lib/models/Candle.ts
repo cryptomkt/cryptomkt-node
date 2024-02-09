@@ -5,5 +5,5 @@ export interface Candle {
   min: string;
   max: string;
   volume: string;
-  volume_quote: string;
+  volumeQuote: string;
 }

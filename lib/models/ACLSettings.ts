@@ -1,8 +1,8 @@
 export interface ACLSettings {
-  sub_account_id: string;
-  deposit_address_generation_enabled: boolean;
-  withdraw_enabled: boolean;
+  SubAccountId: string;
+  depositAddressGenerationEnabled: boolean;
+  withdrawEnabled: boolean;
   description: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }

@@ -1,7 +1,7 @@
 export interface Trade {
   id: string;
-  order_id: string;
-  client_order_id: string;
+  orderId: string;
+  clientOrderId: string;
   symbol: string;
   side: string;
   quantity: string;
