@@ -1,4 +1,7 @@
 export const fromCamelCaseToSnakeCase = (obj: any): any => {
+  if (isNull(obj)) {
+    return obj
+  }
   if (isArray(obj)) {
     return (obj as any[]).map(val => fromCamelCaseToSnakeCase(val));
   }
@@ -16,6 +19,9 @@ const convertObjectKeysToSnakeCase = (obj: { [x: string]: any }): { [x: string]:
 }
 
 export const fromSnakeCaseToCamelCase = (obj: any): any => {
+  if (isNull(obj)) {
+    return obj
+  }
   if (isArray(obj)) {
     return (obj as any[]).map(val => fromSnakeCaseToCamelCase(val));
   }
@@ -38,7 +44,7 @@ const camelCaseToSnakeCase = (camelCase: string) => {
 }
 
 const snakeCaseToCamelCase = (value: string) =>
-  value.toLowerCase().replace(/([_][a-z])/g, _letter => _letter.replace('_', '').toUpperCase()
+  value.replace(/([_][a-z])/g, _letter => _letter.replace('_', '').toUpperCase()
   );
 
 const isObject = (value: any) => {
@@ -49,4 +55,8 @@ const isArray = (value: any) => {
   return Array.isArray(value)
 }
 
+
+function isNull(obj: any) {
+  return obj === undefined || obj === null
+}
 

@@ -8,6 +8,7 @@ import {
   TRANSACTION_SUBTYPE,
   TRANSACTION_TYPE,
 } from "../constants";
+import { fromSnakeCaseToCamelCase } from "../paramStyleConverter";
 
 /**
  * WalletClient connects via websocket to cryptomarket to get wallet information of the user. uses SHA256 as auth method and authenticates on connection.
@@ -46,7 +47,7 @@ export class WalletClient extends AuthClient {
    *
    * @return A promise that resolves with a list of wallet balances
    */
-  getWalletBalances(): Promise<Balance[]> {
+  async getWalletBalances(): Promise<Balance[]> {
     return this.makeRequest<Balance[]>({ method: "wallet_balances" });
   }
 
@@ -80,43 +81,44 @@ export class WalletClient extends AuthClient {
    *
    * https://api.exchange.cryptomkt.com/#get-transactions
    *
-   * @param {string[]} [params.tx_ids] Optional. List of transaction identifiers to query
-   * @param {TRANSACTION_TYPE[]} [params.transaction_types] Optional. List of types to query. valid types are: 'DEPOSIT', 'WITHDRAW', 'TRANSFER' and 'SWAP'
-   * @param {TRANSACTION_SUBTYPE[]} [params.transaction_subtyes] Optional. List of subtypes to query. valid subtypes are: 'UNCLASSIFIED', 'BLOCKCHAIN', 'AIRDROP', 'AFFILIATE', 'STAKING', 'BUY_CRYPTO', 'OFFCHAIN', 'FIAT', 'SUB_ACCOUNT', 'WALLET_TO_SPOT', 'SPOT_TO_WALLET', 'WALLET_TO_DERIVATIVES', 'DERIVATIVES_TO_WALLET', 'CHAIN_SWITCH_FROM', 'CHAIN_SWITCH_TO' and 'INSTANT_EXCHANGE'
-   * @param {TRANSACTION_STATUS[]} [params.transaction_statuses] Optional. List of statuses to query. valid subtypes are: 'CREATED', 'PENDING', 'FAILED', 'SUCCESS' and 'ROLLED_BACK'
+   * @param {string[]} [params.txIds] Optional. List of transaction identifiers to query
+   * @param {TRANSACTION_TYPE[]} [params.transactionTypes] Optional. List of types to query. valid types are: 'DEPOSIT', 'WITHDRAW', 'TRANSFER' and 'SWAP'
+   * @param {TRANSACTION_SUBTYPE[]} [params.transactionSubtyes] Optional. List of subtypes to query. valid subtypes are: 'UNCLASSIFIED', 'BLOCKCHAIN', 'AIRDROP', 'AFFILIATE', 'STAKING', 'BUY_CRYPTO', 'OFFCHAIN', 'FIAT', 'SUB_ACCOUNT', 'WALLET_TO_SPOT', 'SPOT_TO_WALLET', 'WALLET_TO_DERIVATIVES', 'DERIVATIVES_TO_WALLET', 'CHAIN_SWITCH_FROM', 'CHAIN_SWITCH_TO' and 'INSTANT_EXCHANGE'
+   * @param {TRANSACTION_STATUS[]} [params.transactionStatuses] Optional. List of statuses to query. valid subtypes are: 'CREATED', 'PENDING', 'FAILED', 'SUCCESS' and 'ROLLED_BACK'
    * @param {string} [params.from] Optional. Interval initial value when ordering by 'created_at'. As Datetime
    * @param {string} [params.till] Optional. Interval end value when ordering by 'created_at'. As Datetime
-   * @param {string} [params.id_from] Optional. Interval initial value when ordering by id. Min is 0
-   * @param {string} [params.id_till] Optional. Interval end value when ordering by id. Min is 0
-   * @param {SORT_BY} [params.order_by] Optional. sorting parameter.'created_at' or 'id'. Default is 'created_at'
+   * @param {string} [params.idFrom] Optional. Interval initial value when ordering by id. Min is 0
+   * @param {string} [params.idTill] Optional. Interval end value when ordering by id. Min is 0
+   * @param {SORT_BY} [params.orderBy] Optional. sorting parameter.'created_at' or 'id'. Default is 'created_at'
    * @param {SORT} [params.sort] Optional. Sort direction. 'ASC' or 'DESC'. Default is 'DESC'
    * @param {number} [params.limit] Optional. Transactions per query. Defaul is 100. Max is 1000
    * @param {number} [params.offset] Optional. Default is 0. Max is 100000
-   * @param {Boolean} [params.group_transactions] Flag indicating whether the returned transactions will be parts of a single operation. Default is false
+   * @param {Boolean} [params.groupTransactions] Flag indicating whether the returned transactions will be parts of a single operation. Default is false
    * @return A promise that resolves with a list of transactions
    */
-  getTransactions(params: {
-    tx_ids?: number[];
+  async getTransactions(params: {
+    txIds?: number[];
     types?: TRANSACTION_TYPE[];
     subtypes?: TRANSACTION_SUBTYPE[];
     statuses?: TRANSACTION_STATUS[];
     currencies?: string[];
     from?: string;
     till?: string;
-    id_from?: number;
-    id_till?: number;
-    order_by?: SORT_BY;
+    idFrom?: number;
+    idTill?: number;
+    orderBy?: SORT_BY;
     sort?: SORT;
     limit?: number;
     offset?: number;
-    group_transactions?: Boolean;
+    groupTransactions?: Boolean;
   }): Promise<Transaction[]> {
     const clean_params: any = { ...params }
     clean_params.currencies = params.currencies?.join(", ")
-    return this.makeRequest<Transaction[]>({
+    const transactions = await this.makeRequest<Transaction[]>({
       method: "get_transactions",
       params: clean_params
     });
+    return fromSnakeCaseToCamelCase(transactions)
   }
 
   ///////////////////
@@ -136,7 +138,7 @@ export class WalletClient extends AuthClient {
   ): Promise<Boolean> {
     const subscriptionResult = await this.sendSubscription({
       method: "subscribe_transactions",
-      callback: (notification: any, type: NOTIFICATION_TYPE) => callback(notification as Transaction, type),
+      callback: (notification: any, type: NOTIFICATION_TYPE) => callback(fromSnakeCaseToCamelCase(notification) as Transaction, type),
     });
     return (subscriptionResult as { result: boolean }).result;
   }

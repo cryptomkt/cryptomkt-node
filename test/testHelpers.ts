@@ -64,11 +64,11 @@ export function goodDict(checkFn: (arg0: any) => any, dict: { [x: string]: any }
 // goodCurrency checks the precence of every field in the currency dict
 export function goodCurrency(currency: { [x: string]: any }) {
   let good = goodObject(currency, [
-    "full_name",
-    "payin_enabled",
-    "payout_enabled",
-    "transfer_enabled",
-    "precision_transfer",
+    "fullName",
+    "payinEnabled",
+    "payoutEnabled",
+    "transferEnabled",
+    "precisionTransfer",
     "networks",
   ]);
   if (!good) {
@@ -86,27 +86,27 @@ export function goodNetwork(network: any) {
   return goodObject(network, [
     "network",
     "default",
-    "payin_enabled",
-    "payout_enabled",
-    "precision_payout",
-    "payout_fee",
-    "payout_is_payment_id",
-    "payin_payment_id",
-    "payin_confirmations",
+    "payinEnabled",
+    "payoutEnabled",
+    "precisionPayout",
+    "payoutFee",
+    "payoutIsPaymentId",
+    "payinPaymentId",
+    "payinConfirmations",
   ]);
 }
 // goodSymbol check the precence of every field in the symbol dict
 export function goodSymbol(symbol: any) {
   return goodObject(symbol, [
     "type",
-    "base_currency",
-    "quote_currency",
+    "baseCurrency",
+    "quoteCurrency",
     "status",
-    "quantity_increment",
-    "tick_size",
-    "take_rate",
-    "make_rate",
-    "fee_currency",
+    "quantityIncrement",
+    "tickSize",
+    "takeRate",
+    "makeRate",
+    "feeCurrency",
     // "margin_trading",
     // "max_initial_leverage",
   ]);
@@ -122,7 +122,7 @@ export function goodTicker(ticker: any) {
     "high",
     "open",
     "volume",
-    "volume_quote",
+    "volumeQuote",
     "timestamp",
   ]);
 }
@@ -155,36 +155,59 @@ export function goodPublicTrade(trade: any) {
 
 // goodPublicTrade check the precence of every field in the trade dict
 export function goodWSTrade(trade: any) {
-  return goodObject(trade, ["t", "i", "p", "q", "s"]);
+  return goodObject(trade, ["timestamp", "id", "price", "quantity", "side"]);
 }
 
 // goodPublicTrade check the precence of every field in the trade dict
 export function goodWSCandle(candle: any) {
-  return goodObject(candle, ["t", "o", "c", "h", "l", "v", "q"]);
+  return goodObject(candle, ["timestamp", "openPrice", "closePrice", "highPrice", "lowPrice", "baseVolume", "quoteVolume"]);
 }
 
 
 // goodPublicTrade check the precence of every field in the trade dict
 export function goodWSTicker(ticker: any) {
-  return goodObject(ticker, ["t", "a", "A", "b", "B", "c", "o", "h", "l", "v", "q", "p", "P", "L"]);
+  return goodObject(ticker, [
+    "timestamp",
+    "bestAsk",
+    "bestAskQuantity",
+    "bestBid",
+    "bestBidQuantity",
+    "closePrice",
+    "openPrice",
+    "highPrice",
+    "lowPrice",
+    "baseVolume",
+    "quoteVolume",
+    "priceChange",
+    "PriceChangePercent",
+    "lastTradeId"]);
 }
 
 
 export function goodWSOrderbook(orderbook: any) {
-  const goodOrderbook = goodObject(orderbook, ["t", "s", "a", "b"]);
+  const goodOrderbook = goodObject(orderbook, [
+    "timestamp",
+    "sequence",
+    "asks",
+    "bids"]);
   if (!goodOrderbook) return false;
 
-  for (const level of orderbook["a"]) {
+  for (const level of orderbook["asks"]) {
     if (!goodOrderbookLevel(level)) return false;
   }
-  for (const level of orderbook["b"]) {
+  for (const level of orderbook["bids"]) {
     if (!goodOrderbookLevel(level)) return false;
   }
   return true;
 }
 // goodPublicTrade check the precence of every field in the trade dict
 export function goodWSOrderbookTop(orderbookTop: any) {
-  return goodObject(orderbookTop, ["t", "a", "A", "b", "B"]);
+  return goodObject(orderbookTop, [
+    "timestamp",
+    "bestAsk",
+    "bestAskQuantity",
+    "bestBid",
+    "bestBidQuantity",]);
 }
 
 
@@ -217,7 +240,7 @@ export function goodCandle(candle: any) {
     "min",
     "max",
     "volume",
-    "volume_quote",
+    "volumeQuote",
   ]);
 }
 
@@ -235,20 +258,20 @@ export function goodBalance(balance: any) {
 export function goodOrder(order: { [x: string]: any }) {
   let good = goodObject(order, [
     "id",
-    "client_order_id",
+    "clientOrderId",
     "symbol",
     "side",
     "status",
     "type",
-    "time_in_force",
+    "timeInForce",
     "quantity",
-    "quantity_cumulative",
+    "quantityCumulative",
     // "price", // optional
     // "stop_price",  // optional
     // "expire_time", // optional
     // "original_client_order_id", // optional
-    "created_at",
-    "updated_at",
+    "createdAt",
+    "updatedAt",
     // "trades", // optional. List of trades
   ]);
   if (!good) return false;
@@ -274,8 +297,8 @@ export function goodTradeOfOrder(trade: any) {
 export function goodTrade(trade: any) {
   return goodObject(trade, [
     "id",
-    "order_id",
-    "client_order_id",
+    "orderId",
+    "clientOrderId",
     "symbol",
     "side",
     "quantity",
@@ -287,7 +310,7 @@ export function goodTrade(trade: any) {
 }
 
 export function goodTradingCommission(transaction: any) {
-  return goodObject(transaction, ["symbol", "take_rate", "make_rate"]);
+  return goodObject(transaction, ["symbol", "takeRate", "makeRate"]);
 }
 
 // goodTransaction check the precence of every field in the transaction dict
@@ -316,8 +339,8 @@ export function goodTransaction(transaction: { native: any }) {
     "status",
     "type",
     "subtype",
-    "created_at",
-    "updated_at",
+    "createdAt",
+    "updatedAt",
     // "native", // optional
     // "primetrust", // optional
     // "meta" // optional
@@ -334,7 +357,7 @@ export function goodTransaction(transaction: { native: any }) {
 
 export function goodNativeTransaction(transaction: any) {
   return goodObject(transaction, [
-    "tx_id",
+    "txId",
     "index",
     "currency",
     "amount",
@@ -352,40 +375,40 @@ export function goodNativeTransaction(transaction: any) {
 
 export function goodMetaTransaction(transaction: any) {
   return goodObject(transaction, [
-    "fiat_to_crypto",
+    "fiatToCrypto",
     "id",
-    "provider_name",
-    "order_type",
-    "order_type",
-    "source_currency",
-    "target_currency",
-    "wallet_address",
-    "tx_hash",
-    "target_amount",
-    "source_amount",
+    "providerName",
+    "orderType",
+    "orderType",
+    "sourceCurrency",
+    "targetCurrency",
+    "walletAddress",
+    "txHash",
+    "targetAmount",
+    "sourceAmount",
     "status",
-    "created_at",
-    "updated_at",
-    "deleted_at",
-    "payment_method_type",
+    "createdAt",
+    "updatedAt",
+    "deletedAt",
+    "paymentMethodType",
   ]);
 }
 
 export function goodReport(report: Report) {
   return goodObject(report, [
     "id",
-    "client_order_id",
+    "clientOrderId",
     "symbol",
     "side",
     "status",
     "type",
-    "time_in_force",
+    "timeInForce",
     "quantity",
-    "quantity_cumulative",
+    "quantityCumulative",
     "price",
-    "post_only",
-    "created_at",
-    "updated_at",
+    "postOnly",
+    "createdAt",
+    "updatedAt",
     // "report_type", not present in order list reports
   ]);
 }
@@ -395,19 +418,19 @@ export function goodAmountLock(report: any) {
     "id",
     "currency",
     "amount",
-    "date_end",
+    "dateEnd",
     "description",
     "cancelled",
-    "cancelled_at",
-    "cancel_description",
-    "created_at",
+    "cancelledAt",
+    "cancelDescription",
+    "createdAt",
   ]);
 }
 
 
 export function goodPriceRate(report: any) {
   return goodObject(report, [
-    "t",
-    "r"
+    "timestamp",
+    "rate"
   ]);
 }

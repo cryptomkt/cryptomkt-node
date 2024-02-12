@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 import WebSocket from "ws";
 import { ResponsePromiseFactory } from "./ResponsePromiseFactory";
 import { WSResponse } from "./WSResponse";
+import { fromCamelCaseToSnakeCase } from "../paramStyleConverter";
 
 export class WSClientBase {
   private uri: string;
@@ -101,13 +102,15 @@ export class WSClientBase {
     return response as Boolean;
   }
 
-  protected request({ method, params = {} }: { method: any; params?: {}; }): Promise<unknown> {
+  protected request({ method, params: paramsRaw = {} }: { method: any; params?: {}; }): Promise<unknown> {
+    const params = fromCamelCaseToSnakeCase(paramsRaw)
     const { id, promise } = this.multiResponsePromiseFactory.newOneResponsePromise();
     const payload = { method, params, id };
     this.ws.send(JSON.stringify(payload));
     return withTimeout(this.requestTimeoutMs, promise);
   }
-  protected requestList({ method, params = {}, responseCount = 1 }: { method: any; params?: {}; responseCount?: number; }): Promise<unknown> {
+  protected requestList({ method, params: paramsRaw = {}, responseCount = 1 }: { method: any; params?: {}; responseCount?: number; }): Promise<unknown> {
+    const params = fromCamelCaseToSnakeCase(paramsRaw)
     const { id, promise } = this.multiResponsePromiseFactory.newMultiResponsePromise(responseCount);
     const payload = { method, params, id };
     this.ws.send(JSON.stringify(payload));

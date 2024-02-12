@@ -19,7 +19,7 @@ import {
   goodTicker,
   goodTickerPrice,
   listSize,
-} from "../test_helpers";
+} from "../testHelpers";
 
 describe("Rest client test", () => {
   let client = new Client("", "");

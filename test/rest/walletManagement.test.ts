@@ -10,7 +10,7 @@ import {
   goodFee,
   goodList,
   goodTransaction,
-} from "../test_helpers";
+} from "../testHelpers";
 import { Address } from "../../lib/models";
 const keys = require("/home/ismael/cryptomarket/keys.json");
 
@@ -110,7 +110,7 @@ describe("wallet management", () => {
         currency: "ADA",
         amount: "0.1",
         address: adaAddress.address,
-        auto_commit: false,
+        autoCommit: false,
       });
       assert(transactionID !== "", "no transaction id");
       let commitResult = await client.withdrawCryptoCommit(transactionID);
@@ -123,7 +123,7 @@ describe("wallet management", () => {
         currency: "ADA",
         amount: "0.1",
         address: adaAddress.address,
-        auto_commit: false,
+        autoCommit: false,
       });
       assert(transactionID !== "", "no transaction id");
       let rollbackResult = await client.withdrawCryptoRollback(transactionID);
@@ -241,6 +241,6 @@ describe("wallet management", () => {
 });
 function sameAddress(oldAddress: Address, newAddres: Address) {
   return oldAddress.address === newAddres.address && oldAddress.currency && newAddres.currency
-    && oldAddress.payment_id === newAddres.payment_id && oldAddress.public_key === oldAddress.public_key
+    && oldAddress.paymentId === newAddres.paymentId && oldAddress.publicKey === oldAddress.publicKey
 }
 

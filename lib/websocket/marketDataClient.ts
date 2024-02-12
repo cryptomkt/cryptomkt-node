@@ -19,8 +19,11 @@ import {
   WSOrderBook,
   WSTicker,
   WSTrade,
+  WSTradeRaw,
 } from "../models";
+import { parseMapInterceptor, parseMapListInterceptor, parseOrderbookTop, parsePriceRate, parseWSCandle, parseWSOrderbook, parseWSTicker, parseWSTrade } from "./DataParser";
 import { WSClientBase } from "./clientBase";
+import { fromCamelCaseToSnakeCase } from "../paramStyleConverter"
 
 /**
  * MarketDataClient connects via websocket to cryptomarket to get market information of the exchange.
@@ -109,7 +112,7 @@ export class MarketDataClient extends WSClientBase {
     const { subscriptions } = (await this.sendChanneledSubscription({
       channel,
       callback,
-      params,
+      params: fromCamelCaseToSnakeCase(params),
     })) as {
       subscriptions: string[];
     };
@@ -148,7 +151,7 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: "trades",
-      callback,
+      callback: parseMapListInterceptor(callback, parseWSTrade),
       params,
     });
   }
@@ -185,7 +188,7 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `candles/${period}`,
-      callback,
+      callback: parseMapListInterceptor(callback, parseWSCandle),
       params,
     });
   }
@@ -218,7 +221,7 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `ticker/price/${speed}`,
-      callback,
+      callback: parseMapInterceptor(callback, parseWSCandle),
       params,
       withDefaultSymbols: true,
     });
@@ -252,7 +255,7 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `ticker/price/${speed}/batch`,
-      callback,
+      callback: parseMapListInterceptor(callback, parseWSCandle),
       params,
       withDefaultSymbols: true,
     });
@@ -286,7 +289,7 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `ticker/${speed}`,
-      callback,
+      callback: parseMapInterceptor(callback, parseWSTicker),
       params,
       withDefaultSymbols: true,
     });
@@ -313,14 +316,14 @@ export class MarketDataClient extends WSClientBase {
     params: { speed, ...params },
   }: {
     callback: (
-      notification: { [x: string]: Ticker[] },
+      notification: { [x: string]: WSTicker },
       type: NOTIFICATION_TYPE
     ) => any;
     params: { speed: TICKER_SPEED; symbols?: string[] };
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `ticker/${speed}/batch`,
-      callback,
+      callback: parseMapInterceptor(callback, parseWSTicker),
       params,
       withDefaultSymbols: true,
     });
@@ -353,7 +356,7 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: "orderbook/full",
-      callback,
+      callback: parseMapInterceptor(callback, parseWSOrderbook),
       params,
     });
   }
@@ -391,7 +394,7 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `orderbook/${depth}/${speed}`,
-      callback,
+      callback: parseMapInterceptor(callback, parseWSOrderbook),
       params,
       withDefaultSymbols: true,
     });
@@ -417,7 +420,7 @@ export class MarketDataClient extends WSClientBase {
     params: { speed, depth, ...params },
   }: {
     callback: (
-      notification: { [x: string]: WSOrderBook[] },
+      notification: { [x: string]: WSOrderBook },
       type: NOTIFICATION_TYPE
     ) => any;
     params: {
@@ -428,7 +431,7 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `orderbook/${depth}/${speed}/batch`,
-      callback,
+      callback: parseMapInterceptor(callback, parseWSOrderbook),
       params,
       withDefaultSymbols: true,
     });
@@ -453,7 +456,7 @@ export class MarketDataClient extends WSClientBase {
     params: { speed, ...params },
   }: {
     callback: (
-      notification: { [x: string]: OrderBookTop[] },
+      notification: { [x: string]: OrderBookTop },
       type: NOTIFICATION_TYPE
     ) => any;
     params: {
@@ -463,7 +466,7 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `orderbook/top/${speed}`,
-      callback,
+      callback: parseMapInterceptor(callback, parseOrderbookTop),
       params,
       withDefaultSymbols: true,
     });
@@ -488,7 +491,7 @@ export class MarketDataClient extends WSClientBase {
     params: { speed, ...params },
   }: {
     callback: (
-      notification: { [x: string]: OrderBookTop[] },
+      notification: { [x: string]: OrderBookTop },
       type: NOTIFICATION_TYPE
     ) => any;
     params: {
@@ -498,7 +501,7 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `orderbook/top/${speed}/batch`,
-      callback,
+      callback: parseMapInterceptor(callback, parseOrderbookTop),
       params,
       withDefaultSymbols: true,
     });
@@ -514,9 +517,9 @@ export class MarketDataClient extends WSClientBase {
    * https://api.exchange.cryptomkt.com/#subscribe-to-price-rates
    * 
    * @param {function} callback recieves a feed of price rates as a map of them, indexed by currency id, and the type of notification, only DATA
-   * @param {PRICE_RATE_SPEED} speed The speed of the feed. '1s' or '3s'
-   * @param {string} target_currency quote currency of the rate
-   * @param {string} currencies Optional. a list of base currencies to get rates. If omitted, subscribe to all currencies
+   * @param {PRICE_RATE_SPEED} params.speed The speed of the feed. '1s' or '3s'
+   * @param {string} params.targetCurrency quote currency of the rate
+   * @param {string} params.currencies Optional. a list of base currencies to get rates. If omitted, subscribe to all currencies
    * @return A promise that resolves when subscribed with a list of the successfully subscribed currencies
    */
   subscribeToPriceRates({
@@ -529,13 +532,13 @@ export class MarketDataClient extends WSClientBase {
     ) => any;
     params: {
       speed: PRICE_RATE_SPEED;
-      target_currency: string,
+      targetCurrency: string,
       currencies?: string[];
     };
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `price/rate/${speed}`,
-      callback,
+      callback: parseMapInterceptor(callback, parsePriceRate),
       params,
       withDefaultCurrencies: true,
     });
@@ -551,9 +554,9 @@ export class MarketDataClient extends WSClientBase {
    * https://api.exchange.cryptomkt.com/#subscribe-to-price-rates-in-batches
    * 
    * @param {function} callback recieves a feed of price rates as a map of them, indexed by currency id, and the type of notification, only DATA
-   * @param {PRICE_RATE_SPEED} speed The speed of the feed. '1s' or '3s'
-   * @param {string} target_currency quote currency of the rate
-   * @param {string} currencies Optional. a list of base currencies to get rates. If omitted, subscribe to all currencies
+   * @param {PRICE_RATE_SPEED} params.speed The speed of the feed. '1s' or '3s'
+   * @param {string} params.target_currency quote currency of the rate
+   * @param {string} params.currencies Optional. a list of base currencies to get rates. If omitted, subscribe to all currencies
    * @return A promise that resolves when subscribed with a list of the successfully subscribed currencies
    */
   subscribeToPriceRatesInBatches({
@@ -572,7 +575,7 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `price/rate/${speed}/batch`,
-      callback,
+      callback: parseMapInterceptor(callback, parsePriceRate),
       params,
       withDefaultCurrencies: true,
     });

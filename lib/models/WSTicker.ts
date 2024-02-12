@@ -1,4 +1,21 @@
 export interface WSTicker {
+  timestamp: number;
+  bestAsk: string;
+  bestAskQuantity: string;
+  bestBid: string;
+  bestBidQuantity: string;
+  closePrice: string;
+  openPrice: string;
+  highPrice: string;
+  lowPrice: string;
+  baseVolume: string;
+  quoteVolume: string;
+  priceChange: string;
+  PriceChangePercent: string;
+  lastTradeId: number;
+}
+
+export interface WSTickerRaw {
   /**
    * timestamp
    */

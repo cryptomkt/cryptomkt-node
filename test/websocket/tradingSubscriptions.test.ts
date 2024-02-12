@@ -2,7 +2,7 @@ const keys = require("/home/ismael/cryptomarket/keys.json");
 import { expect } from "chai";
 import { WSTradingClient } from "../../lib";
 import { SUBSCRIPTION_MODE } from "../../lib/constants";
-import { SECOND, goodBalance, goodReport, timeout } from "../test_helpers";
+import { SECOND, goodBalance, goodReport, timeout } from "../testHelpers";
 
 describe("tradingClient subscriptions", function () {
   let wsclient: WSTradingClient;
@@ -50,7 +50,7 @@ describe("tradingClient subscriptions", function () {
   })
   function newOrderRequest(clientOrderID: string) {
     return wsclient.createSpotOrder({
-      client_order_id: clientOrderID,
+      clientOrderId: clientOrderID,
       symbol: "EOSETH",
       side: "sell",
       quantity: "0.01",

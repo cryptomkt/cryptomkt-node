@@ -12,7 +12,7 @@ import {
   goodOrder,
   goodTradingCommission,
   listSize,
-} from "../test_helpers";
+} from "../testHelpers";
 const keys = require("/home/ismael/cryptomarket/keys.json");
 
 describe("spot trading", () => {
@@ -59,7 +59,7 @@ describe("spot trading", () => {
         side: SIDE.SELL,
         quantity: "0.01",
         price: "1000",
-        client_order_id: timestamp,
+        clientOrderId: timestamp,
       });
       assert(goodOrder(order), "not good order after creation");
 
@@ -69,8 +69,8 @@ describe("spot trading", () => {
 
       // replacing
       let newOrderID = Date.now().toString() + "1";
-      order = await client.replaceSpotOrder(order.client_order_id, {
-        new_client_order_id: newOrderID,
+      order = await client.replaceSpotOrder(order.clientOrderId, {
+        newClientOrderId: newOrderID,
         quantity: "0.02",
         price: "1000",
       });
@@ -91,7 +91,7 @@ describe("spot trading", () => {
       assert(goodOrder(order), "not good order after creation");
 
       // cancelation
-      order = await client.cancelSpotOrder(order.client_order_id);
+      order = await client.cancelSpotOrder(order.clientOrderId);
       assert(goodOrder(order), "not good order after cancellation");
     });
   });
@@ -160,13 +160,13 @@ describe("spot trading", () => {
        let order_list_id = Date.now().toString();
       await client.createNewSpotOrderList({
         // order_list_id: order_list_id,
-        contingency_type: CONTINGENCY.ALL_OR_NONE,
+        contingencyType: CONTINGENCY.ALL_OR_NONE,
         orders: [
           {
             symbol: 'EOSETH',
             side: SIDE.SELL,
             type: ORDER_TYPE.LIMIT,
-            time_in_force: TIME_IN_FORCE.FOK,
+            timeInForce: TIME_IN_FORCE.FOK,
             quantity: '0.1',
             price: '1000',
             // client_order_id: order_list_id
@@ -175,7 +175,7 @@ describe("spot trading", () => {
             symbol: 'EOSUSDT',
             side: SIDE.SELL,
             type: ORDER_TYPE.LIMIT,
-            time_in_force: TIME_IN_FORCE.FOK,
+            timeInForce: TIME_IN_FORCE.FOK,
             quantity: '0.1',
             price: '1000'
           }

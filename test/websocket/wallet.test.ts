@@ -2,7 +2,7 @@ const keys = require("/home/ismael/cryptomarket/keys.json");
 import { expect } from "chai";
 import "mocha";
 import { WSWalletClient } from "../../lib";
-import { goodBalance, goodTransaction } from "../test_helpers";
+import { goodBalance, goodTransaction } from "../testHelpers";
 
 describe("WalletClient", function () {
   let wsclient: WSWalletClient;

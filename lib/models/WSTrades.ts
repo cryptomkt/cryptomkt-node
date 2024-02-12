@@ -1,6 +1,14 @@
 import { SIDE } from "../constants";
 
 export interface WSTrade {
+  timestamp: number;
+  id: number;
+  price: string;
+  quantity: string;
+  side: SIDE;
+}
+
+export interface WSTradeRaw {
   /**
    * timestamp
    */

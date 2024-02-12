@@ -1,9 +1,8 @@
 import { expect } from "chai";
 import "mocha";
-import { fromCamelCaseToSnakeCase } from "../lib/camelCaseToSnakeCaseConverter";
-import { fromSnakeCaseToCamelCase } from "../lib/snakeCaseToCamelCaseConverter";
+import { fromCamelCaseToSnakeCase, fromSnakeCaseToCamelCase } from "../lib/paramStyleConverter";
 
-describe.only("convert from camel case to snake case", function () {
+describe("convert from camel case to snake case", function () {
   describe("convert object keys at base level", function () {
     it("converts for diferent value tyeps", function () {
       const camelCaseObj = {
@@ -37,7 +36,7 @@ describe.only("convert from camel case to snake case", function () {
     });
   });
 });
-describe.only("convert from camel case to snake case", function () {
+describe("convert from camel case to snake case", function () {
   describe("convert object keys at base level", function () {
     it("converts for diferent value tyeps", function () {
       const snake_case_obj = {

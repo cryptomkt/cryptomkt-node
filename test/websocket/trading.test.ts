@@ -3,12 +3,12 @@ import { expect } from "chai";
 import "mocha";
 import { WSTradingClient } from "../../lib";
 import { CONTINGENCY, ORDER_STATUS, REPORT_STATUS, SIDE, TIME_IN_FORCE } from "../../lib/constants";
-import { SECOND, goodBalance, goodReport, goodTradingCommission, timeout } from "../test_helpers";
+import { SECOND, goodBalance, goodReport, goodTradingCommission, timeout } from "../testHelpers";
 
 describe("TradingClient", () => {
   let wsclient: WSTradingClient;
   beforeEach(() => {
-    wsclient = new WSTradingClient(keys.apiKey, keys.apiSecret);
+    wsclient = new WSTradingClient(keys.apiKey, keys.apiSecret, undefined, 10_000);
   });
 
   afterEach(() => {
@@ -40,7 +40,7 @@ describe("TradingClient", () => {
       const clientOrderID = newID();
 
       let orderReport = await wsclient.createSpotOrder({
-        client_order_id: clientOrderID,
+        clientOrderId: clientOrderID,
         symbol: "EOSETH",
         side: "sell",
         quantity: "0.01",
@@ -52,8 +52,8 @@ describe("TradingClient", () => {
 
       const newClientOrderID = clientOrderID + "new";
       orderReport = await wsclient.replaceSpotOrder({
-        client_order_id: clientOrderID,
-        new_client_order_id: newClientOrderID,
+        clientOrderId: clientOrderID,
+        newClientOrderId: newClientOrderID,
         quantity: "0.01",
         price: "2000",
       });
@@ -111,22 +111,22 @@ describe("TradingClient", () => {
       const firstOrderID = newID()
       await wsclient.connect();
       const reports = await wsclient.createNewSpotOrderList({
-        order_list_id: firstOrderID,
-        contingency_type: CONTINGENCY.ALL_OR_NONE,
+        orderListId: firstOrderID,
+        contingencyType: CONTINGENCY.ALL_OR_NONE,
         orders: [
           {
-            client_order_id: firstOrderID,
+            clientOrderId: firstOrderID,
             symbol: "EOSETH",
             side: SIDE.SELL,
-            time_in_force: TIME_IN_FORCE.FOK,
+            timeInForce: TIME_IN_FORCE.FOK,
             quantity: "0.01",
             price: "100000"
           },
           {
-            client_order_id: firstOrderID + "2",
+            clientOrderId: firstOrderID + "2",
             symbol: "EOSBTC",
             side: SIDE.SELL,
-            time_in_force: TIME_IN_FORCE.FOK,
+            timeInForce: TIME_IN_FORCE.FOK,
             quantity: "0.01",
             price: "100000"
           }
@@ -142,7 +142,7 @@ describe("TradingClient", () => {
 
   async function expectActiveOrderWithID(clientOrderID: string) {
     const activeOrders = await wsclient.getActiveSpotOrders();
-    const present = activeOrders.filter(order => order.client_order_id === clientOrderID).length === 1;
+    const present = activeOrders.filter(order => order.clientOrderId === clientOrderID).length === 1;
     if (!present) expect.fail("order is not present");
   }
 

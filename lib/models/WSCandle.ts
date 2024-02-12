@@ -1,4 +1,16 @@
 export interface WSCandle {
+  timestamp: number;
+  openPrice: string;
+  closePrice: string;
+  highPrice: string;
+  lowPrice: string;
+  baseVolume: string;
+  quoteVolume: string;
+}
+
+export type MiniTicker = WSCandle;
+
+export interface WSCandleRaw {
   /**
    * timestamp
    */
@@ -28,5 +40,3 @@ export interface WSCandle {
    */
   q: string;
 }
-
-export type MiniTicker = WSCandle;

@@ -8,7 +8,7 @@ import {
   PRICE_RATE_SPEED,
   TICKER_SPEED,
 } from "../../lib/constants";
-import { SECOND, goodPriceRate, goodWSCandle, goodWSOrderbook, goodWSOrderbookTop, goodWSTicker, goodWSTrade, timeout } from "../test_helpers";
+import { SECOND, goodPriceRate, goodWSCandle, goodWSOrderbook, goodWSOrderbookTop, goodWSTicker, goodWSTrade, timeout } from "../testHelpers";
 
 describe("websocket market data client", function () {
   let wsclient: WSMarketDataClient;
@@ -137,7 +137,7 @@ describe("websocket market data client", function () {
         callback: checkGoodMapValues(goodPriceRate),
         params: {
           speed: PRICE_RATE_SPEED._3_S,
-          target_currency: "BTC",
+          targetCurrency: "BTC",
           currencies: ["EOS", "ETH", "CRO"],
         },
       });
