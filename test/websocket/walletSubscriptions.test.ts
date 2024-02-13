@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { Client, WSWalletClient } from "../../lib/index";
 import { Balance, Transaction } from "../../lib/models";
 import { SECOND, goodBalance, goodTransaction, timeout } from "../testHelpers";
-const keys = require("/home/ismael/cryptomarket/keys.json");
+const keys = require("../../keys.json");
 
 describe("wallet transactions", function () {
   let wsclient: WSWalletClient;

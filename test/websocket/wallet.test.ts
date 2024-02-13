@@ -1,4 +1,4 @@
-const keys = require("/home/ismael/cryptomarket/keys.json");
+const keys = require("../../keys.json");
 import { expect } from "chai";
 import "mocha";
 import { WSWalletClient } from "../../lib";
