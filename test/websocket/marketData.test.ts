@@ -152,7 +152,7 @@ describe("websocket market data client", function () {
         callback: checkGoodMapValues(goodPriceRate),
         params: {
           speed: PRICE_RATE_SPEED._3_S,
-          target_currency: "BTC",
+          targetCurrency: "BTC",
           currencies: ["EOS", "ETH", "CRO"],
         },
       });

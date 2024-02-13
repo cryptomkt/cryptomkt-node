@@ -107,8 +107,8 @@ export function goodSymbol(symbol: any) {
     "takeRate",
     "makeRate",
     "feeCurrency",
-    // "margin_trading",
-    // "max_initial_leverage",
+    // "marginTrading",
+    // "maxInitialLeverage",
   ]);
 }
 
@@ -135,10 +135,10 @@ export function goodTickerPrice(price: any) {
   return goodObject(price, ["price", "timestamp"]);
 }
 
-export function goodPriceHistory(price_history: { [x: string]: any }) {
-  let good = goodObject(price_history, ["currency", "history"]);
+export function goodPriceHistory(priceHistory: { [x: string]: any }) {
+  let good = goodObject(priceHistory, ["currency", "history"]);
   if (!good) return false;
-  for (const point of price_history["history"]) {
+  for (const point of priceHistory["history"]) {
     if (!goodHistoryPoint(point)) return false;
   }
   return true;
@@ -250,7 +250,7 @@ export function goodBalance(balance: any) {
     "currency",
     "available",
     "reserved",
-    // "reserved_margin" optional.
+    // "reservedMargin" optional.
   ]);
 }
 
@@ -267,9 +267,9 @@ export function goodOrder(order: { [x: string]: any }) {
     "quantity",
     "quantityCumulative",
     // "price", // optional
-    // "stop_price",  // optional
-    // "expire_time", // optional
-    // "original_client_order_id", // optional
+    // "stotPrice",  // optional
+    // "expireTime", // optional
+    // "originalClientOrderId", // optional
     "createdAt",
     "updatedAt",
     // "trades", // optional. List of trades
@@ -318,8 +318,8 @@ export function goodAddress(transaction: any) {
   return goodObject(transaction, [
     "currency",
     "address",
-    // "payment_id", // optional
-    // "public_key", // optional
+    // "paymentId", // optional
+    // "publicKey", // optional
   ]);
 }
 
@@ -363,12 +363,12 @@ export function goodNativeTransaction(transaction: any) {
     "amount",
     // "fee", // optional
     // "address", // optional
-    // "payment_id", // optional
+    // "paymentId", // optional
     // "hash", // optional
-    // "offchain_id", // optional
+    // "offchainId", // optional
     // "confirmations", // optional
-    // "public_comment", // optional
-    // "error_code", // optional
+    // "publicComment", // optional
+    // "errorCode", // optional
     // "senders" // optional
   ]);
 }
@@ -409,7 +409,7 @@ export function goodReport(report: Report) {
     "postOnly",
     "createdAt",
     "updatedAt",
-    // "report_type", not present in order list reports
+    // "reportType", not present in order list reports
   ]);
 }
 

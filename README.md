@@ -124,7 +124,7 @@ console.log(balanceList);
 let clientOrderID = Math.floor(Date.now() / 1000).toString();
 // make a spot order
 const report = await tradingClient.createSpotOrder({
-  client_order_id: clientOrderID,
+  clientOrderId: clientOrderID,
   symbol: "EOSETH",
   side: "sell",
   quantity: "0.01",

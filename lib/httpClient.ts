@@ -32,13 +32,13 @@ export class HttpClient {
   }
 
 
-  private prepareRequest(params_raw: any, method: HTTP_METHOD, publicMethod: boolean, endpoint: string): { url: URL, opts: Map<string, string> } {
-    if (params_raw === undefined || params_raw === null) {
-      params_raw = {}
+  private prepareRequest(paramsRaw: any, method: HTTP_METHOD, publicMethod: boolean, endpoint: string): { url: URL, opts: Map<string, string> } {
+    if (paramsRaw === undefined || paramsRaw === null) {
+      paramsRaw = {}
     }
     let url = new URL(this.apiPath + endpoint);
-    this.removeNulls(params_raw);
-    const params: [string, string][] = Object.entries(params_raw)
+    this.removeNulls(paramsRaw);
+    const params: [string, string][] = Object.entries(paramsRaw)
       .map(([k, v]) => [k, String(v)])
     let rawQuery = new URLSearchParams(params);
     rawQuery.sort();
@@ -54,7 +54,7 @@ export class HttpClient {
     let credentialParams = query
     if (method === HTTP_METHOD.POST) {
       opts.headers["Content-Type"] = "application/json";
-      credentialParams = JSON.stringify(params_raw)
+      credentialParams = JSON.stringify(paramsRaw)
     }
     if (method === HTTP_METHOD.PATCH) {
       opts.headers["Content-Type"] = "application/x-www-form-urlencoded";
@@ -71,8 +71,8 @@ export class HttpClient {
     return { url, opts };
   }
 
-  private removeNulls(params_raw: any) {
-    Object.keys(params_raw).forEach(key => (params_raw[key] === undefined || params_raw[key] == null) ? delete params_raw[key] : {});
+  private removeNulls(paramsRaw: any) {
+    Object.keys(paramsRaw).forEach(key => (paramsRaw[key] === undefined || paramsRaw[key] == null) ? delete paramsRaw[key] : {});
   }
 
   private async makeFetch(url: URL, opts: any): Promise<any> {

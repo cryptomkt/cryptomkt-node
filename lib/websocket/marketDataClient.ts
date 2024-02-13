@@ -555,7 +555,7 @@ export class MarketDataClient extends WSClientBase {
    * 
    * @param {function} callback recieves a feed of price rates as a map of them, indexed by currency id, and the type of notification, only DATA
    * @param {PRICE_RATE_SPEED} params.speed The speed of the feed. '1s' or '3s'
-   * @param {string} params.target_currency quote currency of the rate
+   * @param {string} params.targetCurrency quote currency of the rate
    * @param {string} params.currencies Optional. a list of base currencies to get rates. If omitted, subscribe to all currencies
    * @return A promise that resolves when subscribed with a list of the successfully subscribed currencies
    */
@@ -569,7 +569,7 @@ export class MarketDataClient extends WSClientBase {
     ) => any;
     params: {
       speed: PRICE_RATE_SPEED;
-      target_currency: string,
+      targetCurrency: string,
       currencies?: string[];
     };
   }): Promise<string[]> {

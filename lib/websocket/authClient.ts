@@ -3,7 +3,7 @@ import { WSClientBase } from "./clientBase";
 
 interface AuthPayload {
   type: string
-  api_key: string
+  apiKey: string
   timestamp: number
   window?: number
   signature: string
@@ -53,7 +53,7 @@ export class AuthClient extends WSClientBase {
     const timestamp = Math.floor(Date.now());
     const payload: AuthPayload = {
       type: "HS256",
-      api_key: this.apiKey,
+      apiKey: this.apiKey,
       timestamp: timestamp,
       signature: "",
     };

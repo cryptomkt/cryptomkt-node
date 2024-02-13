@@ -157,19 +157,19 @@ describe("spot trading", () => {
       this.timeout(0);
       await timeout(3 * SECOND)
 
-       let order_list_id = Date.now().toString();
+      let firstOrderId = Date.now().toString();
       await client.createNewSpotOrderList({
-        // order_list_id: order_list_id,
+        orderListId: firstOrderId,
         contingencyType: CONTINGENCY.ALL_OR_NONE,
         orders: [
           {
+            clientOrderId: firstOrderId,
             symbol: 'EOSETH',
             side: SIDE.SELL,
             type: ORDER_TYPE.LIMIT,
             timeInForce: TIME_IN_FORCE.FOK,
             quantity: '0.1',
             price: '1000',
-            // client_order_id: order_list_id
           },
           {
             symbol: 'EOSUSDT',
