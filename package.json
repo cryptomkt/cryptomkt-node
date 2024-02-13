@@ -1,48 +1,55 @@
 {
-    "name": "cryptomarket",
-    "version": "1.0.6",
-    "description": "The CryptoMarket for Node.js",
-    "homepage": "https://www.cryptomkt.com",
-    "engines": {
-        "node": "*"
-    },
-    "main": "lib/index.js",
-    "scripts": {
-        "test": "mocha"
-    },
-    "author": "Ismael Verdugo Zambra",
-    "directories": {
-        "lib": "./lib"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/cryptomkt/cryptomkt-node.git"
-    },
-    "bugs": {
-        "url": "https://github.com/cryptomkt/cryptomkt-node/issues"
-    },
-    "keywords": [
-        "api",
-        "cryptomarket",
-        "cryptomkt",
-        "exchange",
-        "ethereum",
-        "ether",
-        "bitcoin",
-        "btc",
-        "eos",
-        "stellar",
-        "xlm"
-    ],
-    "license": "Apache-2.0",
-    "dependencies": {
-        "bigdecimal": "^0.6.1",
-        "crypto-js": "^4.0.0",
-        "node-fetch": "^2.6.1",
-        "rxjs": "^6.6.3",
-        "ws": "^7.4.0"
-    },
-    "devDependencies": {
-        "mocha": "^8.4.0"
-    }
+  "name": "cryptomarket",
+  "version": "3.0.0",
+  "description": "The CryptoMarket for Node.js",
+  "homepage": "https://www.cryptomkt.com",
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "lib/index.ts",
+  "scripts": {
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.test.ts'"
+  },
+  "author": "Ismael Verdugo Zambra",
+  "directories": {
+    "lib": "./lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cryptomkt/cryptomkt-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cryptomkt/cryptomkt-node/issues"
+  },
+  "keywords": [
+    "api",
+    "cryptomarket",
+    "cryptomkt",
+    "exchange",
+    "ethereum",
+    "ether",
+    "bitcoin",
+    "btc",
+    "eos",
+    "stellar",
+    "xlm"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "bigdecimal": "0.6.1",
+    "crypto-js": "4.2.0",
+    "node-fetch": "^2.6.1",
+    "ws": "^7.4.0"
+  },
+  "devDependencies": {
+    "@types/chai": "4.3.11",
+    "@types/crypto-js": "4.2.2",
+    "@types/mocha": "10.0.6",
+    "@types/node-fetch": "2.6.11",
+    "@types/ws": "^8.5.3",
+    "chai": "^4.3.6",
+    "mocha": "10.3.0",
+    "ts-node": "10.9.2",
+    "typescript": "5.3.3"
+  }
 }

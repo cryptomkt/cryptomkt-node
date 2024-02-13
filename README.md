@@ -1,147 +1,195 @@
 # CryptoMarket-javascript
-[main page](https://www.cryptomkt.com/)
 
+[main page](https://www.cryptomkt.com/)
 
 [sign up in CryptoMarket](https://www.cryptomkt.com/account/register).
 
 # Installation
+
 To install Cryptomarket use npm
+
 ```
 npm install cryptomarket
 ```
+
 # Documentation
 
-This sdk makes use of the [api version 2](https://api.exchange.cryptomkt.com/v2) of cryptomarket.
+This sdk makes use of the [api version 3](https://api.exchange.cryptomkt.com) of cryptomarket.
 
 # Quick Start
 
 ## rest client
+
 ```javascript
-const { Client } = require('cryptomarket')
+const { Client } = require("cryptomarket");
 
 // instance a client
-let apiKey='AB32B3201'
-let api_secret='21b12401'
-let client = new Client(apiKey, api_secret)
+let apiKey = "AB32B3201";
+let apiSecret = "21b12401";
+let client = new Client(apiKey, apiSecret);
 
 // get currencies
-let currencies = await client.getCurrencies()
+let currencies = await client.getCurrencies();
 
 // get order books
-let orderBook = await client.getOrderBook('EOSETH')
+let orderBook = await client.getOrderBook("EOSETH");
 
 // get your account balances
-let accountBalance = await client.getAccountBalance()
+let accountBalances = await client.getWalletBalances();
 
 // get your trading balances
-let tradingBalance = await client.getTradingBalance()
+let tradingBalances = await client.getSpotTradingBalances();
 
-// move balance from account to trading
-let result = await client.transferMoneyFromAccountBalanceToTradingBalance('ETH', '3.2')
+// move balance from wallet to spot trading
+let result = await client.transferBetweenWalletAndExchange({
+  currency: "EOS",
+  amount: "3.2",
+  source: Account.Wallet,
+  destination: Account.Spot,
+});
 
 // get your active orders
-let orders = await client.getActiveOrders('EOSETH')
+let orders = await client.getAllActiveSpotOrders("EOSETH");
 
 // create a new order
-let newOrder = await client.createOrder({'symbol':'EOSETH', 'side':'buy', 'quantity':'10', 'price':'10'})
+let newOrder = await client.createOrder({
+  symbol: "EOSETH",
+  side: "buy",
+  quantity: "10",
+  price: "10",
+});
 ```
 
 ## websocket client
-There are three websocket clients, one for public request (WSPublicClient), one for trading request (WSTradingClient) and one for the account requests (WSAccountClient).
 
-Clients work with promises
+There are three websocket clients, the market data client, the spot trading client and the wallet client.
+The market data client requires no authentication, while the spot trading client and the wallet client do require it.
 
-Clients must be connected before any request. Authentication for WSTradingClient and WSAccountClient is automatic.
+All websocket methods return promises. Subscriptions also take in a function of two parameters, the notification data, and the notification type. The notification type is of type NOTIFICATION_TYPE, and is either SNAPSHOT, NOTIFICATION or DATA.
 
-```javascript
-const { WSPublicClient, WSTradingClient, WSAccountClient} = require('cryptomarket')
+The documentation of a specific subscriptions explains with of this types of
+notification uses.
 
-let publicClient = new WSPublicClient()
-await publicClient.connect()
+### MarketDataClient
 
-// get currencies
-await publicClient.getCurrencies()
+Example of use of the market data client
 
-let apiKey='AB32B3201'
-let apiSecret='21b12401'
-let tradingClient = new WSTradingClient(apiKey, apiSecret)
+```typescript
+// instantiate a market data client
+const wsclient = new WSMarketDataClient();
 
-await tradingClient.connect()
+// make a partial orderbook subscription
 
-// get your trading balance
-let balance = await tradingClient.getTradingBalance()
+//    make subscription
+await marketDataClient.subscribeToPartialOrderBook(
+  callback:(notification, type) => {
+    if (type === NOTIFICATION_TYPE.DATA) {
+      System.out.println("this subscription only recieves data notifications");
+    }
+    for (const symbol in notification) {
+      console.log(symbol);
+      const orderbook = notification[symbol];
+      console.log(orderbook);
+    }
+  },
+  params: {
+    speed: ORDER_BOOK_SPEED._100_MS,
+    depth: DEPTH._5,
+    symbols: ["EOSETH", "ETHBTC"],
+  }
+);
 
-// get your active orders
-let activeOrders = await tradingClient.getActiveOrders()
 
-await tradingClient.createOrder({
-    clientOrderId:"qqwe123qwe", 
-    symbol:'EOSETH', 
-    side:'buy', 
-    quantity:'10',
-    price:'10'
-})
-
-let accountClient = new WSAccountClient(apiKey, apiSecret)
-await accountClient.connect()
-
-// get your account balance
-let accBalance = await accountCilent.getAccountBalance()
 ```
-### subscriptions
 
-all subscriptions take a callback argument to call with each feed of the subscription
+### SpotTradingClient
 
-```javascript
+Example of use of the spot trading client
 
-// callback is for the subscription feed
-function callback(feed) {
-    // handle feed
-    console.log(feed)
+```typescript
+const apiKey = "AB32B3201";
+const apiSecret= "21b12401";
+
+// instantiate a spot trading websocket client with a window of 10 seconds
+const wsclient = new WSTradingClient(apiKey, apiSecret, 10_000);
+
+// connect the client (and authenticate it automatically)
+await wsclient.connect();
+
+// get all the spot trading balances
+const balanceList = await tradingClient.getSpotTradingBalances()
+console.log(balanceList);
+
+
+let clientOrderID = Math.floor(Date.now() / 1000).toString();
+// make a spot order
+const report = await tradingClient.createSpotOrder({
+  clientOrderId: clientOrderID,
+  symbol: "EOSETH",
+  side: "sell",
+  quantity: "0.01",
+  price: "1000",
 }
+console.log(report);
+```
 
-await publicClient.subscribeToOrderBook('EOSETH', callabck)
+### WalletClient
 
+Example of use of the wallet client
 
-await accountClient.subscribeToTransactions(callback)
+```typescript
+// instantiate a wallet websocket client with a default window of 10 seconds
+const wsclient = new WSWalletClient(keys.apiKey, keys.apiSecret);
+
+// get a list of transactions
+const transactionList = await walletClient.getTransactions({
+  currencies: ["EOS"],
+  limit: 3,
+});
+console.log(transactionList);
+
+// subscribe to a feed of transactions
+await walletClient.subscribeToTransactions((notification, type) => {
+  if (type === NOTIFICATION_TYPE.UPDATE) {
+    console.log("this subscription only recieves update notifications");
+  }
+  console.log(notification);
+});
 ```
 
 ## error handling
 
-```javascript
+```typescript
 
-{ CryptomarketSDKException, Client, WSPublicClient } = require('cryptomarket')
+{ CryptomarketSDKException, Client, WSMarketDataClient } = require('cryptomarket')
 // exceptions derive from the CryptomarketSDKException class.
 
-client = new Client()
+const client = new Client()
 // catch a failed transaction
 try {
-    order = client.createOrder({
+    const order = await client.createOrder({
         'symbol':'EOSETHH',  // non existant symbol
         'side':'sell',
-        'quantity':'10', 
+        'quantity':'10',
         'price':'10'})
 } catch (error) {
     console.log(error)
 }
 
-wsclient = new WSPublicClient()
-await wsclient.connect()
+const wsclient = new WSMarketDataClient()
+await wsclient.connect();
 
-// catch a missing argument
+// catch missing arguments
 try {
-    await wsclient.subscribeToOrderbook('ETHBTC') // needs a callback
+    await wsclient.subscribeToMiniTickers()
 } catch (error) {
     console.log(error)
 }
-
-// also catches forwarded errors from the cryptomarket exchange server
-try {
-    let trades = await wsclient.getTrades("abcde", myCallback) // not a real symbol
-} catch (err) {
-    console.log(err)
-}
 ```
+
+# Constants
+
+All constants used for calls are in the `constants` module.
 
 # Checkout our other SDKs
 
