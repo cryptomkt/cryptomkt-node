@@ -39,13 +39,30 @@ describe("websocket market data client", function () {
 
   describe("subscribe to candles", function () {
     it("gets a feed of candles", async function () {
-      // TODO: unknown state
       this.timeout(0);
       await wsclient.connect();
       await wsclient.subscribeToCandles({
         callback: checkGoodMapListValues(goodWSCandle),
         params: {
           period: PERIOD._1_MINUTE,
+          symbols: ["EOSETH", "ETHBTC"],
+          limit: 3,
+        },
+      });
+      await timeout(3 * SECOND);
+    });
+  });
+
+
+  describe.only("subscribe to converted candles", function () {
+    it("gets a feed of candles", async function () {
+      this.timeout(0);
+      await wsclient.connect();
+      await wsclient.subscribeToConvertedCandles({
+        callback: checkGoodMapListValues(goodWSCandle),
+        params: {
+          period: PERIOD._1_MINUTE,
+          targetCurrency: "BTC",
           symbols: ["EOSETH", "ETHBTC"],
           limit: 3,
         },
