@@ -1,8 +1,7 @@
 import assert from "assert";
 import { Client } from "../../lib";
 import { goodList, goodOrder, goodTrade } from "../testHelpers";
-const keys = require("../../keys.json");
-
+const keys = require("../../../../keys.json");
 import "mocha";
 
 describe("spot trading history", () => {

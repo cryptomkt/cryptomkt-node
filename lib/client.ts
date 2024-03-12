@@ -88,6 +88,97 @@ export class Client {
     return fromSnakeCaseToCamelCase(response);
   }
 
+
+  //////////////
+  // ALIASES //
+  /////////////
+  // MARKET DATA
+
+  /**
+   * alias of {@link getTicker}
+   */
+  getTickerBySymbol = this.getTicker;
+  /**
+   * alias of {@link getTicker}
+   */
+  getTickerOfSymbol = this.getTicker;
+  /**
+   * alias of {@link getTickerLastPrice}
+   */
+  getTickerPriceBySymbol = this.getTickerLastPrice;
+  /**
+   * alias of {@link getTickerLastPrice}
+   */
+  getTickerPriceOfSymbol = this.getTickerLastPrice;
+  /**
+   * Alias of {@link getTradesBySymbol}
+   */
+  getTradesOfSymbol = this.getTradesBySymbol;
+  /**
+   * alias of {@link getOrderBook}
+   */
+  getOrderbookBySymbol = this.getOrderBook;
+  /** 
+   * alias of {@link getOrderBook}
+   */
+  getOrderbookOfSymbol = this.getOrderBook;
+  /**
+   * alias of {@link getOrderBookVolume}
+   */
+  getOrderBookVolumeBySymbol = this.getOrderBookVolume;
+  /**
+   * alias of {@link getOrderBookVolume}
+   */
+  getOrderBookVolumeOfSymbol = this.getOrderBookVolume;
+  /**
+   * alias of {@link getCandlesBySymbol}
+   */
+  getCandlesOfSymbol = this.getCandlesBySymbol;
+  /**
+   * alias of {@link getConvertedCandlesBySymbol}
+   */
+  getConvertedCandlesOfSymbol = this.getConvertedCandlesBySymbol;
+
+  // SPOT TRADING 
+
+  /**
+   * alias of {@link getSpotTradingBalance}
+   */
+  getSpotTradingBalanceOfCurrency = this.getSpotTradingBalance;
+  /**
+   * alias of {@link getSpotTradingBalance}
+   */
+  getSpotTradingBalanceByCurrency = this.getSpotTradingBalance;
+  /**
+   * alias of {@link getTradingCommission}
+   */
+  getTradingCommissionOfSymbol = this.getTradingCommission;
+  /**
+   * alias of {@link getTradingCommission}
+   */
+  getTradingCommissionBySymbol = this.getTradingCommission;
+
+  // WALLET MANAGEMENT
+
+  /**
+   * alias of {@link getWalletBalance}
+   */
+  getWalletBalanceOfCurrency = this.getWalletBalance;
+  /**
+   * alias of {@link getWalletBalance}
+   */
+  getWalletBalanceByCurrency = this.getWalletBalance;
+  /**
+   * alais of {@link getDepositCryptoAddress}
+   */
+  getDepositCryptoAddressByCurrency = this.getDepositCryptoAddress;
+  /**
+   * alias of {@link getDepositCryptoAddress}
+   */
+  getDepositCryptoAddressOfCurrency = this.getDepositCryptoAddress;
+
+
+
   //////////////////
   // PUBLIC CALLS //
   //////////////////

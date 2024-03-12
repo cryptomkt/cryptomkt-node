@@ -1,4 +1,5 @@
-const keys = require("../../keys.json");
+
+const keys = require("../../../../keys.json");
 import { expect } from "chai";
 import "mocha";
 import { WSWalletClient } from "../../lib";

@@ -230,6 +230,11 @@ export class TradingClient extends AuthClient {
   }
 
   /**
+   * alias of {@link getSpotTradingBalance}
+   */
+  getSpotTradingBalanceOfCurrency = this.getSpotTradingBalance;
+
+  /**
    * Get the personal trading fee rates for all symbols
    *
    * https://api.exchange.cryptomkt.com/#get-spot-fees
@@ -253,6 +258,15 @@ export class TradingClient extends AuthClient {
     const commission = await this.makeRequest<Commission>({ method: "spot_fee", params: { symbol } });
     return fromSnakeCaseToCamelCase(commission)
   }
+
+  /**
+   * alias of {@link getSpotFee}
+   */
+  getSpotFeeOfSymbol = this.getSpotFee;
+  /**
+   * alias of {@link getSpotFee}
+   */
+  getSpotFeeBySymbol = this.getSpotFee;
 
   ///////////////////
   // subscriptions //

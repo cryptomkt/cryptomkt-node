@@ -1,4 +1,5 @@
-const keys = require("../../keys.json");
+
+const keys = require("../../../../keys.json");
 import { expect } from "chai";
 import { WSTradingClient } from "../../lib";
 import { SUBSCRIPTION_MODE } from "../../lib/constants";

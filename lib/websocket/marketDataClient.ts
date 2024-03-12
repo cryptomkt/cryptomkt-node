@@ -206,7 +206,7 @@ export class MarketDataClient extends WSClientBase {
    *
    * @param {function} callback a function that recieves notifications as a dict of candles indexed by symbol, and the type of notification (either SNAPSHOT or UPDATE)
    * @param {function} params.targetCurrency Target currency for conversion
-   * @param {PERIOD} params.period A valid tick interval. 'M1' (one minute), 'M3', 'M5', 'M15', 'M30', 'H1' (one hour), 'H4', 'D1' (one day), 'D7', '1M' (one month). Default is 'M30'
+   * @param {PERIOD} params.period A valid tick interval. 'M1' (one minute), 'M3', 'M5', 'M15', 'M30', 'H1' (one hour), 'H4', 'D1' (one day), 'D7', '1M' (one month).
    * @param {string[]} params.symbols A list of symbol ids
    * @param {number} [params.limit] Optional. Number of historical entries returned in the first feed. Min is 0. Max is 1000. Default is 0
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols

@@ -54,7 +54,7 @@ describe("websocket market data client", function () {
   });
 
 
-  describe.only("subscribe to converted candles", function () {
+  describe("subscribe to converted candles", function () {
     it("gets a feed of candles", async function () {
       this.timeout(0);
       await wsclient.connect();
