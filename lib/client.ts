@@ -149,6 +149,11 @@ export class Client {
    * alias of {@link getSpotTradingBalance}
    */
   getSpotTradingBalanceByCurrency = this.getSpotTradingBalance;
+
+  /**
+   * alias of {@link getAllTradingCommissions}
+   */
+  getTradingCommissions = this.getAllTradingCommissions;
   /**
    * alias of {@link getTradingCommission}
    */
