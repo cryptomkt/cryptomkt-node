@@ -37,6 +37,8 @@ import {
   Trade,
   Transaction,
 } from "./models";
+import { ConvertedCandlesBySymbol } from "./models/ConvertedCandle";
+import { ConvertedCandles } from "./models/ConvertedCandles";
 import { fromCamelCaseToSnakeCase, fromSnakeCaseToCamelCase } from "./paramStyleConverter"
 
 
@@ -85,6 +87,102 @@ export class Client {
     const response = await this.httpClient.put(endpoint, parsedParams);
     return fromSnakeCaseToCamelCase(response);
   }
+
+
+  //////////////
+  // ALIASES //
+  /////////////
+  // MARKET DATA
+
+  /**
+   * alias of {@link getTicker}
+   */
+  getTickerBySymbol = this.getTicker;
+  /**
+   * alias of {@link getTicker}
+   */
+  getTickerOfSymbol = this.getTicker;
+  /**
+   * alias of {@link getTickerLastPrice}
+   */
+  getTickerPriceBySymbol = this.getTickerLastPrice;
+  /**
+   * alias of {@link getTickerLastPrice}
+   */
+  getTickerPriceOfSymbol = this.getTickerLastPrice;
+  /**
+   * Alias of {@link getTradesBySymbol}
+   */
+  getTradesOfSymbol = this.getTradesBySymbol;
+  /**
+   * alias of {@link getOrderBook}
+   */
+  getOrderbookBySymbol = this.getOrderBook;
+  /** 
+   * alias of {@link getOrderBook}
+   */
+  getOrderbookOfSymbol = this.getOrderBook;
+  /**
+   * alias of {@link getOrderBookVolume}
+   */
+  getOrderBookVolumeBySymbol = this.getOrderBookVolume;
+  /**
+   * alias of {@link getOrderBookVolume}
+   */
+  getOrderBookVolumeOfSymbol = this.getOrderBookVolume;
+  /**
+   * alias of {@link getCandlesBySymbol}
+   */
+  getCandlesOfSymbol = this.getCandlesBySymbol;
+  /**
+   * alias of {@link getConvertedCandlesBySymbol}
+   */
+  getConvertedCandlesOfSymbol = this.getConvertedCandlesBySymbol;
+
+  // SPOT TRADING 
+
+  /**
+   * alias of {@link getSpotTradingBalance}
+   */
+  getSpotTradingBalanceOfCurrency = this.getSpotTradingBalance;
+  /**
+   * alias of {@link getSpotTradingBalance}
+   */
+  getSpotTradingBalanceByCurrency = this.getSpotTradingBalance;
+
+  /**
+   * alias of {@link getAllTradingCommissions}
+   */
+  getTradingCommissions = this.getAllTradingCommissions;
+  /**
+   * alias of {@link getTradingCommission}
+   */
+  getTradingCommissionOfSymbol = this.getTradingCommission;
+  /**
+   * alias of {@link getTradingCommission}
+   */
+  getTradingCommissionBySymbol = this.getTradingCommission;
+
+  // WALLET MANAGEMENT
+
+  /**
+   * alias of {@link getWalletBalance}
+   */
+  getWalletBalanceOfCurrency = this.getWalletBalance;
+  /**
+   * alias of {@link getWalletBalance}
+   */
+  getWalletBalanceByCurrency = this.getWalletBalance;
+  /**
+   * alais of {@link getDepositCryptoAddress}
+   */
+  getDepositCryptoAddressByCurrency = this.getDepositCryptoAddress;
+  /**
+   * alias of {@link getDepositCryptoAddress}
+   */
+  getDepositCryptoAddressOfCurrency = this.getDepositCryptoAddress;
+
+
 
   //////////////////
   // PUBLIC CALLS //
@@ -394,9 +492,9 @@ export class Client {
   /**
    * Get candles for all symbols or for specified symbols
    *
-   * Candels are used for OHLC representation
+   * Candles are used for OHLC representation
    *
-   *  The result contains candles with non-zero volume only (no trades = no candles).
+   * The result contains candles with non-zero volume only (no trades = no candles).
    *
    * Requires no API key Access Rights.
    *
@@ -426,9 +524,9 @@ export class Client {
   /**
    * Get candles for a symbol
    *
-   * Candels are used for OHLC representation
+   * Candles are used for OHLC representation
    *
-   *  The result contains candles with non-zero volume only (no trades = no candles).
+   * The result contains candles with non-zero volume only (no trades = no candles).
    *
    * Requires no API key Access Rights.
    *
@@ -457,6 +555,79 @@ export class Client {
     }
   ): Promise<Candle[]> {
     return this.get(`public/candles/${symbol}`, params);
+  }
+
+  /**
+   * Gets candles regarding the last price converted to the target currency for all symbols or for the specified symbols
+   *
+   * Candles are used for OHLC representation
+   *
+   * The result contains candles with non-zero volume only (no trades = no candles).
+   * 
+   * Conversion from the symbol quote currency to the target currency is the mean of "best" bid price and "best" ask price in the order book. If there is no "best" bid or ask price, the last price is returned.
+   *
+   * Requires no API key Access Rights.
+   *
+   * https://api.exchange.cryptomkt.com/#candles
+   *
+   * @param {object} [params]
+   * @param {string[]} [params.targetCurrency] Target currency for conversion
+   * @param {string[]} [params.symbols] Optional. A list of symbol ids
+   * @param {PERIOD} [params.period] Optional. A valid tick interval. 'M1' (one minute), 'M3', 'M5', 'M15', 'M30', 'H1' (one hour), 'H4', 'D1' (one day), 'D7', '1M' (one month). Default is 'M30'
+   * @param {SORT} [params.sort] Optional. Sort direction. 'ASC' or 'DESC'. Default is 'DESC'
+   * @param {string} [params.from] Optional. Initial value of the queried interval. As Datetime
+   * @param {string} [params.till] Optional. Last value of the queried interval. As Datetime
+   * @param {number} [params.limit] Optional. Candles per query. Defaul is 10. Min is 1. Max is 1000
+   *
+   * @return A class with the targetCurrency and data with a map with a list of candles for each symbol of the query. indexed by symbol.
+   */
+  getConvertedCandles(params?: {
+    targetCurrency: string;
+    symbols?: string[];
+    period?: PERIOD;
+    sort?: SORT;
+    from?: string;
+    till?: string;
+    limit?: number;
+  }): Promise<ConvertedCandles> {
+    return this.get("public/converted/candles", params);
+  }
+
+  /**
+   * Gets candles regarding the last price converted to the target currency for the specified symbol
+   *
+   * Candles are used for OHLC representation
+   *
+   * The result contains candles with non-zero volume only (no trades = no candles).
+   * 
+   * Conversion from the symbol quote currency to the target currency is the mean of "best" bid price and "best" ask price in the order book. If there is no "best" bid or ask price, the last price is returned.
+   *
+   * Requires no API key Access Rights.
+   *
+   * https://api.exchange.cryptomkt.com/#candles
+   *
+   * @param {string[]} symbol A symbol id
+   * @param {object} params
+   * @param {string[]} params.targetCurrency Target currency for conversion
+   * @param {PERIOD} [params.period] Optional. A valid tick interval. 'M1' (one minute), 'M3', 'M5', 'M15', 'M30', 'H1' (one hour), 'H4', 'D1' (one day), 'D7', '1M' (one month). Default is 'M30'
+   * @param {SORT} [params.sort] Optional. Sort direction. 'ASC' or 'DESC'. Default is 'DESC'
+   * @param {string} [params.from] Optional. Initial value of the queried interval. As Datetime
+   * @param {string} [params.till] Optional. Last value of the queried interval. As Datetime
+   * @param {number} [params.limit] Optional. Candles per query. Defaul is 10. Min is 1. Max is 1000
+   *
+   * @return An object with the targetCurrency and data with a list of candles for the symbol of the query.
+   */
+  getConvertedCandlesBySymbol(
+    symbol: string,
+    params?: {
+      targetCurrency: string;
+      period?: PERIOD;
+      sort?: SORT;
+      from?: string;
+      till?: string;
+      limit?: number;
+    }): Promise<ConvertedCandlesBySymbol> {
+    return this.get(`public/converted/candles/${symbol}`, params);
   }
 
   /////////////////////////

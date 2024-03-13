@@ -39,13 +39,12 @@ const convertObjectKeysToCamelCase = (obj: { [x: string]: any }): { [x: string]:
 }
 
 
-const camelCaseToSnakeCase = (camelCase: string) => {
-  return camelCase.replace(/([A-Z])/g, letter => `_${letter.toLowerCase()}`);
-}
+const camelCaseToSnakeCase = (camelCase: string) => camelCase
+  .replace(/([A-Z])/g, letter => `_${letter.toLowerCase()}`)
 
-const snakeCaseToCamelCase = (value: string) =>
-  value.replace(/([_][a-z])/g, _letter => _letter.replace('_', '').toUpperCase()
-  );
+
+const snakeCaseToCamelCase = (value: string) => value
+  .replace(/([_][a-z])/g, _letter => _letter.replace('_', '').toUpperCase());
 
 const isObject = (value: any) => {
   return typeof (value) == "object";

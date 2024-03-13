@@ -12,7 +12,7 @@ import {
   goodTransaction,
 } from "../testHelpers";
 import { Address } from "../../lib/models";
-const keys = require("../../keys.json");
+const keys = require("../../../../keys.json");
 
 describe("wallet management", () => {
   let client = new Client(keys.apiKey, keys.apiSecret);

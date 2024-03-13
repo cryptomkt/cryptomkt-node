@@ -74,7 +74,7 @@ export class MarketDataClient extends WSClientBase {
     const promise = new Promise(function (resolve, reject) {
       emitter.once(ID.toString(), function (response) {
         if ("error" in response) {
-          reject(new CryptomarketAPIException(response));
+          reject(new CryptomarketAPIException(response.error));
           return;
         }
         resolve(response.result);
@@ -159,7 +159,7 @@ export class MarketDataClient extends WSClientBase {
   /**
    * subscribe to a feed of candles
    *
-   * subscription is for all symbols or for the specified symbols
+   * subscription is for the specified symbols
    *
    * normal subscriptions have one update message per symbol
    *
@@ -171,9 +171,9 @@ export class MarketDataClient extends WSClientBase {
    * https://api.exchange.cryptomkt.com/#subscribe-to-candles
    *
    * @param {function} callback a function that recieves notifications as a dict of candles indexed by symbol, and the type of notification (either SNAPSHOT or UPDATE)
-   * @param {PERIOD} [params.period] Optional. A valid tick interval. 'M1' (one minute), 'M3', 'M5', 'M15', 'M30', 'H1' (one hour), 'H4', 'D1' (one day), 'D7', '1M' (one month). Default is 'M30'
-   * @param {string[]} [params.symbols] Optional. A list of symbol ids
-   * @param {number} params.limit Number of historical entries returned in the first feed. Min is 0. Max is 1000. Default is 0
+   * @param {PERIOD} params.period A valid tick interval. 'M1' (one minute), 'M3', 'M5', 'M15', 'M30', 'H1' (one hour), 'H4', 'D1' (one day), 'D7', '1M' (one month). 
+   * @param {string[]} params.symbols A list of symbol ids
+   * @param {number} [params.limit] Optional. Number of historical entries returned in the first feed. Min is 0. Max is 1000. Default is 0
    * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
    */
   subscribeToCandles({
@@ -188,6 +188,41 @@ export class MarketDataClient extends WSClientBase {
   }): Promise<string[]> {
     return this.makeSubscription({
       channel: `candles/${period}`,
+      callback: parseMapListInterceptor(callback, parseWSCandle),
+      params,
+    });
+  }
+
+  /**
+   * subscribes to a feed of candles regarding the last price converted to the target currency * for the specified symbols
+   *
+   * subscription is only for the specified symbols
+   *
+   * normal subscriptions have one update message per symbol
+   *
+   * Requires no API key Access Rights
+   *
+   * https://api.exchange.cryptomkt.com/#subscribe-to-converted-candles
+   *
+   * @param {function} callback a function that recieves notifications as a dict of candles indexed by symbol, and the type of notification (either SNAPSHOT or UPDATE)
+   * @param {function} params.targetCurrency Target currency for conversion
+   * @param {PERIOD} params.period A valid tick interval. 'M1' (one minute), 'M3', 'M5', 'M15', 'M30', 'H1' (one hour), 'H4', 'D1' (one day), 'D7', '1M' (one month).
+   * @param {string[]} params.symbols A list of symbol ids
+   * @param {number} [params.limit] Optional. Number of historical entries returned in the first feed. Min is 0. Max is 1000. Default is 0
+   * @return A promise that resolves when subscribed with a list of the successfully subscribed symbols
+   */
+  subscribeToConvertedCandles({
+    callback,
+    params: { period, ...params },
+  }: {
+    callback: (
+      notification: { [x: string]: WSCandle[] },
+      type: NOTIFICATION_TYPE
+    ) => any;
+    params: { targetCurrency: string, period: PERIOD; symbols: string[]; limit?: number };
+  }): Promise<string[]> {
+    return this.makeSubscription({
+      channel: `converted/candles/${period}`,
       callback: parseMapListInterceptor(callback, parseWSCandle),
       params,
     });

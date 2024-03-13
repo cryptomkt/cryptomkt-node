@@ -251,4 +251,42 @@ describe("Rest client test", () => {
       assert(goodList(goodCandle, candles), "not good candles");
     });
   });
+  describe("Get Converted candles", () => {
+    it("for all symbols", async function () {
+      this.timeout(0);
+      let candles = await client.getConvertedCandles({ targetCurrency: "ETH" });
+      assert(!emptyDict(candles), "empty list of candles");
+      assert(
+        goodDict((candleList) => goodList(goodCandle, candleList), candles.data),
+        "not good candles"
+      );
+    });
+    it("for 2 symbols", async function () {
+      this.timeout(0);
+      let candles = await client.getConvertedCandles({
+        targetCurrency: "ETH",
+        symbols: ["EOSETH", "PAXGBTC"],
+        period: PERIOD._1_HOUR,
+        limit: 2,
+      });
+      assert(dictSize(candles, 2), "wrong number of symbols");
+      assert(
+        goodDict((candleList) => goodList(goodCandle, candleList), candles.data),
+        "not good candles"
+      );
+    });
+  });
+  describe("Get converted candles Of Symbol", () => {
+    it("with period and limit", async function () {
+      this.timeout(0);
+      let candles = await client.getConvertedCandlesBySymbol("ADAETH", {
+        targetCurrency: "BTC",
+        period: PERIOD._30_MINUTES,
+        limit: 2,
+      });
+      assert(listSize(candles.data, 2), "wrong number of candles");
+      assert(goodList(goodCandle, candles.data), "not good candles");
+    });
+  });
 });
+
