@@ -12,7 +12,7 @@ import {
   goodTransaction,
 } from "../testHelpers";
 import { Address } from "../../lib/models";
-const keys = require("../../keys.json");
+const keys = require("../../../../keys.json");
 
 describe("wallet management", () => {
   let client = new Client(keys.apiKey, keys.apiSecret);
@@ -154,9 +154,12 @@ describe("wallet management", () => {
     it("cro belongs", async function () {
       this.timeout(0);
       let croAddress = await client.getDepositCryptoAddress("CRO");
+      console.log(croAddress)
       let result = await client.checkIfCryptoAddressBelongsToCurrentAccount(
         croAddress.address
       );
+
+      console.log(result)
       assert(result === true, "does not belong");
     });
     it.skip("eos belongs", async function () {

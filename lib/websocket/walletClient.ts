@@ -67,6 +67,15 @@ export class WalletClient extends AuthClient {
   }
 
   /**
+   * alias of {@link getWalletBalance}
+   */
+  getWalletBalanceOfCurrency = this.getWalletBalance;
+  /**
+   * alias of {@link getWalletBalance}
+   */
+  getWalletBalanceByCurrency = this.getWalletBalance;
+
+  /**
    * Get the transaction history of the account
    *
    * Important:

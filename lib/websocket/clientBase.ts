@@ -109,6 +109,7 @@ export class WSClientBase {
     this.ws.send(JSON.stringify(payload));
     return withTimeout(this.requestTimeoutMs, promise);
   }
+  
   protected requestList({ method, params: paramsRaw = {}, responseCount = 1 }: { method: any; params?: {}; responseCount?: number; }): Promise<unknown> {
     const params = fromCamelCaseToSnakeCase(paramsRaw)
     const { id, promise } = this.multiResponsePromiseFactory.newMultiResponsePromise(responseCount);

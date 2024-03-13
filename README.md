@@ -20,28 +20,28 @@ This sdk makes use of the [api version 3](https://api.exchange.cryptomkt.com) of
 
 ## rest client
 
-```javascript
+```typescript
 const { Client } = require("cryptomarket");
 
 // instance a client
-let apiKey = "AB32B3201";
-let apiSecret = "21b12401";
-let client = new Client(apiKey, apiSecret);
+const apiKey = "AB32B3201";
+const apiSecret = "21b12401";
+const client = new Client(apiKey, apiSecret);
 
 // get currencies
-let currencies = await client.getCurrencies();
+const currencies = await client.getCurrencies();
 
 // get order books
-let orderBook = await client.getOrderBook("EOSETH");
+const orderBook = await client.getOrderBook("EOSETH");
 
 // get your account balances
-let accountBalances = await client.getWalletBalances();
+const accountBalances = await client.getWalletBalances();
 
 // get your trading balances
-let tradingBalances = await client.getSpotTradingBalances();
+const tradingBalances = await client.getSpotTradingBalances();
 
 // move balance from wallet to spot trading
-let result = await client.transferBetweenWalletAndExchange({
+const result = await client.transferBetweenWalletAndExchange({
   currency: "EOS",
   amount: "3.2",
   source: Account.Wallet,
@@ -49,10 +49,10 @@ let result = await client.transferBetweenWalletAndExchange({
 });
 
 // get your active orders
-let orders = await client.getAllActiveSpotOrders("EOSETH");
+const activeOrders = await client.getAllActiveSpotOrders("EOSETH");
 
 // create a new order
-let newOrder = await client.createOrder({
+const newOrder = await client.createOrder({
   symbol: "EOSETH",
   side: "buy",
   quantity: "10",

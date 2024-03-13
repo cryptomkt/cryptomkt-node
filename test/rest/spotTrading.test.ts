@@ -13,7 +13,7 @@ import {
   goodTradingCommission,
   listSize,
 } from "../testHelpers";
-const keys = require("../../keys.json");
+const keys = require("../../../../keys.json");
 
 describe("spot trading", () => {
   let client = new Client(keys.apiKey, keys.apiSecret);
