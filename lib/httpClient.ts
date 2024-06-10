@@ -17,6 +17,15 @@ export class HttpClient {
     this.hmac = new HMAC(apiKey, apiSecret, window)
   }
 
+
+  changeWindow(window: number) {
+    this.hmac.changeWindow(window)
+  }
+
+  changeCredentials(apiKey: string, apiSecret: string) {
+    this.hmac.changeCredentials(apiKey, apiSecret)
+  }
+
   async makeRequest(
     method: HTTP_METHOD,
     endpoint: string,

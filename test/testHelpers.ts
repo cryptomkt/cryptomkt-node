@@ -326,7 +326,7 @@ export function goodAddress(transaction: any) {
 export function goodFee(fee: Fee) {
   return goodObject(fee, [
     "fee",
-    "networkFee",
+    // "networkFee", // Optional
     "amount",
     "currency"
   ]);

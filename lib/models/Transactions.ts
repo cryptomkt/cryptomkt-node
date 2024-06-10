@@ -6,6 +6,7 @@ export interface Transaction {
   subtype: string;
   createdAt: string;
   updatedAt: string;
+  lastActivityAt: string;
   native: NativeTransaction;
   commitRisk: CommitRisk;
 }

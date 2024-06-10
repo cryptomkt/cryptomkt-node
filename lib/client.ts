@@ -2,6 +2,7 @@ import {
   ACCOUNT,
   CONTINGENCY,
   IDENTIFY_BY,
+  ORDER_BY,
   ORDER_TYPE,
   PERIOD,
   SIDE,
@@ -50,6 +51,14 @@ export class Client {
 
   constructor(apiKey: string, apiSecret: string, window: number | null = null) {
     this.httpClient = new HttpClient(this.apiUrl, this.apiVersion, apiKey, apiSecret, window)
+  }
+
+  changeWindow(window: number) {
+    this.httpClient.changeWindow(window)
+  }
+
+  changeCredentials(apiKey: string, apiSecret: string) {
+    this.httpClient.changeCredentials(apiKey, apiSecret)
   }
 
   async publicGet(endpoint: string, params: any) {
@@ -1160,6 +1169,22 @@ Accepted values: never, optionally, required
     return this.post("wallet/crypto/fees/estimate", feeRequests);
   }
 
+
+  /**
+   * Get estimates of withdrawal fees
+   *
+   * Requires the "Payment information" API key Access Right.
+   *
+   * https://api.exchange.cryptomkt.com/#bulk-estimate-withdrawal-fee
+   *
+   * @param {FeeRequest[]} feeRequests A list of fee requests
+   *
+   * @return The list of requested fees
+   */
+  async getBulkEstimateWithdrawalFees(feeRequests: FeeRequest[]): Promise<Fee[]> {
+    return this.post("wallet/crypto/fee/estimate/bulk", feeRequests);
+  }
+
   /**
    * Get an estimate of a withdrawal fee
    *
@@ -1180,6 +1205,44 @@ Accepted values: never, optionally, required
     networkCode?: string;
   }): Promise<string> {
     const response = await this.get("wallet/crypto/fee/estimate", params);
+    return response["fee"];
+  }
+
+  /**
+ * Get estimates of deposit fees
+ *
+ * Requires the "Payment information" API key Access Right.
+ *
+ * https://api.exchange.cryptomkt.com/#bulk-estimate-deposit-fee
+ *
+ * @param {FeeRequest[]} feeRequests A list of fee requests
+ *
+ * @return The list of requested fees
+ */
+  async getBulkEstimateDepositFees(feeRequests: FeeRequest[]): Promise<Fee[]> {
+    return this.post("wallet/crypto/fee/deposit/estimate/bulk", feeRequests);
+  }
+
+  /**
+   * Get an estimate of a deposit fee
+   *
+   * Requires the "Payment information" API key Access Right.
+   *
+   * https://api.exchange.cryptomkt.com/#estimate-deposit-fee
+   *
+   * @param {object} params
+   * @param {string} params.currency the currency code for deposit
+   * @param {string} params.amount the expected deposit amount
+   * @param {string} [params.netwrokCode] Optional. Network code
+   *
+   * @return The expected fee
+   */
+  async getEstimateDepositFee(params: {
+    currency: string;
+    amount: string;
+    networkCode?: string;
+  }): Promise<string> {
+    const response = await this.get("wallet/crypto/fee/deposit/estimate", params);
     return response["fee"];
   }
 
@@ -1301,9 +1364,9 @@ Accepted values: wallet, spot. Must not be the same as source
    * @param {TRANSACTION_STATUS[]} [params.statuses] Optional. List of statuses to query. valid subtypes are: 'CREATED', 'PENDING', 'FAILED', 'SUCCESS' and 'ROLLED_BACK'
    * @param {string[]} [params.currencies] Optional. List of currencies of the transactions
    * @param {string[]} [params.networks] Optional. List of network codes
-   * @param {SORT_BY} [params.orderBy] Optional. Defines the sorting type.'createdAt' or 'id'. Default is 'createdAt'
-   * @param {string} [params.from] Optional. Interval initial value when ordering by 'createdAt'. As Datetime
-   * @param {string} [params.till] Optional. Interval end value when ordering by 'createdAt'. As Datetime
+   * @param {ORDER_BY} [params.orderBy] Optional. Defines the sorting type.'CREATED_AT', 'UPDATED_AT', 'LAST_ACTIVITY_AT' or 'ID'. Default is 'CREATED_AT'
+   * @param {string} [params.from] Optional. Interval initial value (inclusive). The value type depends on orderBy.
+   * @param {string} [params.till] Optional. Interval end value (inclusive). The value type depends on orderBy.
    * @param {string} [params.idFrom] Optional. Interval initial value when ordering by id. Min is 0
    * @param {string} [params.idTill] Optional. Interval end value when ordering by id. Min is 0
    * @param {string} [params.sort] Optional. Sort direction. 'ASC' or 'DESC'. Default is 'DESC'.
@@ -1320,7 +1383,7 @@ Accepted values: wallet, spot. Must not be the same as source
     statuses?: TRANSACTION_STATUS[];
     currencies?: string[],
     networks?: string[],
-    orderBy?: SORT_BY;
+    orderBy?: ORDER_BY;
     from?: string;
     till?: string;
     idFrom?: string;
