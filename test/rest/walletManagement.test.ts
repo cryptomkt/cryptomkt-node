@@ -181,20 +181,18 @@ describe("wallet management", () => {
     });
   });
   describe("check if crypto address belongs to current account", () => {
-    it("cro belongs", async function () {
+    it("eth belongs", async function () {
       this.timeout(0);
-      let croAddress = await client.getDepositCryptoAddress("CRO");
+      let croAddress = await client.getDepositCryptoAddress("ETH");
       console.log(croAddress)
       let result = await client.checkIfCryptoAddressBelongsToCurrentAccount(
         croAddress.address
       );
-
-      console.log(result)
       assert(result === true, "does not belong");
     });
-    it.skip("eos belongs", async function () {
+    it("btc belongs", async function () {
       this.timeout(0);
-      let eosAddress = await client.getDepositCryptoAddress("EOS");
+      let eosAddress = await client.getDepositCryptoAddress("BTC");
       let result = await client.checkIfCryptoAddressBelongsToCurrentAccount(
         eosAddress.address
       );

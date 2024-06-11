@@ -43,7 +43,7 @@ describe("WalletClient", function () {
       await wsclient.close();
     });
   });
-  describe("get transactions", function () {
+  describe("get transactions with params", function () {
     it("gets a list of transactions", async function () {
       this.timeout(0);
       await wsclient.connect();

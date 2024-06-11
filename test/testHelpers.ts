@@ -69,6 +69,7 @@ export function goodCurrency(currency: { [x: string]: any }) {
     "payoutEnabled",
     "transferEnabled",
     "precisionTransfer",
+    // "accountTopOrder", // Optional
     "networks",
   ]);
   if (!good) {
@@ -341,15 +342,20 @@ export function goodTransaction(transaction: { native: any }) {
     "subtype",
     "createdAt",
     "updatedAt",
+    "lastActivityAt",
+    "commitRisk",
     // "native", // optional
     // "primetrust", // optional
     // "meta" // optional
   ]);
   if (!good) return false;
-  if ("native" in transaction && !goodNativeTransaction(transaction.native)) {
+  if ("native" in transaction && !goodNativeTransaction(transaction.native)) {    
     return false;
   }
-  // if ("meta" in transaction && !goodMetaTransaction(transaction.native)) {
+  if ("commitRisk" in transaction && !goodCommitRisk(transaction.commitRisk)) {
+    return false;
+  }
+  // if ("meta" in transaction && !goodMetaTransaction(transaction.meta)) {
   //   return false;
   // }
   return true;
@@ -392,6 +398,11 @@ export function goodMetaTransaction(transaction: any) {
     "deletedAt",
     "paymentMethodType",
   ]);
+}
+
+
+export function goodCommitRisk(commitRisk: any) {
+  return goodObject(commitRisk, []);
 }
 
 export function goodReport(report: Report) {
