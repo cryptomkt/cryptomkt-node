@@ -4,6 +4,7 @@ import { expect } from "chai";
 import "mocha";
 import { WSWalletClient } from "../../lib";
 import { goodBalance, goodTransaction } from "../testHelpers";
+import { ORDER_BY, SORT } from "../../lib/constants";
 
 describe("WalletClient", function () {
   let wsclient: WSWalletClient;
@@ -42,4 +43,23 @@ describe("WalletClient", function () {
       await wsclient.close();
     });
   });
+  describe("get transactions", function () {
+    it("gets a list of transactions", async function () {
+      this.timeout(0);
+      await wsclient.connect();
+      const transactions = await wsclient.getTransactions({
+        currencies: ["CRO", "ETH"],
+        orderBy: ORDER_BY.CREATED_AT,
+        sort: SORT.ASC,
+        limit: 100,
+        offset: 2,
+        from: "1614815872000"
+      });
+      const allGood = transactions.map(goodTransaction).every(Boolean)
+      expect(allGood).to.be.true
+      await wsclient.close();
+    });
+  });
 });
+
+

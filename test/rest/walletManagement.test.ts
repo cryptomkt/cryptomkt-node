@@ -2,7 +2,7 @@ import assert from "assert";
 import "mocha";
 import { CryptomarketAPIException, CryptomarketSDKException } from "../../lib";
 import { Client } from "../../lib/client";
-import { ACCOUNT } from "../../lib/constants";
+import { ACCOUNT, ORDER_BY, SORT } from "../../lib/constants";
 import {
   goodAddress,
   goodAmountLock,
@@ -243,6 +243,20 @@ describe("wallet management", () => {
     it("", async function () {
       this.timeout(0);
       let transactions = await client.getTransactionHistory({ currencies: ["CRO", "ETH"] });
+      assert(goodList(goodTransaction, transactions), "not good transaction");
+    });
+  });
+  describe("get transaction history with params", () => {
+    it("", async function () {
+      this.timeout(0);
+      let transactions = await client.getTransactionHistory({
+        currencies: ["CRO", "ETH"],
+        orderBy: ORDER_BY.CREATED_AT,
+        sort: SORT.ASC,
+        limit: 100,
+        offset: 1,
+        from: "1614815872000"
+      });
       assert(goodList(goodTransaction, transactions), "not good transaction");
     });
   });

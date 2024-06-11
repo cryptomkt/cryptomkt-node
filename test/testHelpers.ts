@@ -349,9 +349,9 @@ export function goodTransaction(transaction: { native: any }) {
   if ("native" in transaction && !goodNativeTransaction(transaction.native)) {
     return false;
   }
-  if ("meta" in transaction && !goodMetaTransaction(transaction.native)) {
-    return false;
-  }
+  // if ("meta" in transaction && !goodMetaTransaction(transaction.native)) {
+  //   return false;
+  // }
   return true;
 }
 

@@ -53,10 +53,22 @@ export class Client {
     this.httpClient = new HttpClient(this.apiUrl, this.apiVersion, apiKey, apiSecret, window)
   }
 
+  /**
+   * Changes the window used in authenticated calls
+   *
+   * @param {number} window acceptable time between request and server execution in millis
+   */
   changeWindow(window: number) {
     this.httpClient.changeWindow(window)
   }
 
+
+  /**
+   * Changes the user credentials used for authentication in calls
+   *
+   * @param {string} apiKey    the user public key used in new calls
+   * @param {string} apiSecret the user secret key used in new calls
+   */
   changeCredentials(apiKey: string, apiSecret: string) {
     this.httpClient.changeCredentials(apiKey, apiSecret)
   }
