@@ -160,26 +160,26 @@ describe("wallet management", () => {
       fees.forEach(fee => assert(goodFee(fee), "not good fee"))
     });
   });
-  describe("get estimate deposit fee", () => {
-    it("", async function () {
-      this.timeout(0);
-      let fee = await client.getEstimateDepositFee({
-        currency: "CRO",
-        amount: "100",
-      });
-      assert(fee !== "", "not a good fee");
-    });
-  });
-  describe("get bulk estimates deposit fees", () => {
-    it("", async function () {
-      this.timeout(0);
-      let fees = await client.getBulkEstimateDepositFees([
-        { currency: "CRO", amount: "100" },
-        { currency: "EOS", amount: "12" }
-      ]);
-      fees.forEach(fee => assert(goodFee(fee), "not good fee"))
-    });
-  });
+  // describe("get estimate deposit fee", () => {
+  //   it("", async function () {
+  //     this.timeout(0);
+  //     let fee = await client.getEstimateDepositFee({
+  //       currency: "CRO",
+  //       amount: "100",
+  //     });
+  //     assert(fee !== "", "not a good fee");
+  //   });
+  // });
+  // describe("get bulk estimates deposit fees", () => {
+  //   it("", async function () {
+  //     this.timeout(0);
+  //     let fees = await client.getBulkEstimateDepositFees([
+  //       { currency: "CRO", amount: "100" },
+  //       { currency: "EOS", amount: "12" }
+  //     ]);
+  //     fees.forEach(fee => assert(goodFee(fee), "not good fee"))
+  //   });
+  // });
   describe("check if crypto address belongs to current account", () => {
     it("eth belongs", async function () {
       this.timeout(0);

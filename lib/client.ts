@@ -1220,43 +1220,43 @@ Accepted values: never, optionally, required
     return response["fee"];
   }
 
-  /**
- * Get estimates of deposit fees
- *
- * Requires the "Payment information" API key Access Right.
- *
- * https://api.exchange.cryptomkt.com/#bulk-estimate-deposit-fee
- *
- * @param {FeeRequest[]} feeRequests A list of fee requests
- *
- * @return The list of requested fees
- */
-  async getBulkEstimateDepositFees(feeRequests: FeeRequest[]): Promise<Fee[]> {
-    return this.post("wallet/crypto/fee/deposit/estimate/bulk", feeRequests);
-  }
+//   /**
+//  * Get estimates of deposit fees
+//  *
+//  * Requires the "Payment information" API key Access Right.
+//  *
+//  * https://api.exchange.cryptomkt.com/#bulk-estimate-deposit-fee
+//  *
+//  * @param {FeeRequest[]} feeRequests A list of fee requests
+//  *
+//  * @return The list of requested fees
+//  */
+//   async getBulkEstimateDepositFees(feeRequests: FeeRequest[]): Promise<Fee[]> {
+//     return this.post("wallet/crypto/fee/deposit/estimate/bulk", feeRequests);
+//   }
 
-  /**
-   * Get an estimate of a deposit fee
-   *
-   * Requires the "Payment information" API key Access Right.
-   *
-   * https://api.exchange.cryptomkt.com/#estimate-deposit-fee
-   *
-   * @param {object} params
-   * @param {string} params.currency the currency code for deposit
-   * @param {string} params.amount the expected deposit amount
-   * @param {string} [params.netwrokCode] Optional. Network code
-   *
-   * @return The expected fee
-   */
-  async getEstimateDepositFee(params: {
-    currency: string;
-    amount: string;
-    networkCode?: string;
-  }): Promise<string> {
-    const response = await this.get("wallet/crypto/fee/deposit/estimate", params);
-    return response["fee"];
-  }
+  // /**
+  //  * Get an estimate of a deposit fee
+  //  *
+  //  * Requires the "Payment information" API key Access Right.
+  //  *
+  //  * https://api.exchange.cryptomkt.com/#estimate-deposit-fee
+  //  *
+  //  * @param {object} params
+  //  * @param {string} params.currency the currency code for deposit
+  //  * @param {string} params.amount the expected deposit amount
+  //  * @param {string} [params.netwrokCode] Optional. Network code
+  //  *
+  //  * @return The expected fee
+  //  */
+  // async getEstimateDepositFee(params: {
+  //   currency: string;
+  //   amount: string;
+  //   networkCode?: string;
+  // }): Promise<string> {
+  //   const response = await this.get("wallet/crypto/fee/deposit/estimate", params);
+  //   return response["fee"];
+  // }
 
   /**
    * Converts between currencies
