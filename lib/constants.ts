@@ -27,7 +27,14 @@ export enum SORT {
 
 export enum SORT_BY {
   TIMESTAMP = "timestamp",
+  ID = "id",
+}
+
+
+export enum ORDER_BY {
   CREATED_AT = "created_at",
+  UPDATED_AT = "updated_at",
+  LAST_ACTIVITY_AT = "last_activity_at",
   ID = "id",
 }
 

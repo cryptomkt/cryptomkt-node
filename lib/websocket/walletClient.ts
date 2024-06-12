@@ -2,6 +2,7 @@ import { AuthClient } from "./authClient";
 import { Balance, Transaction } from "../models";
 import {
   NOTIFICATION_TYPE,
+  ORDER_BY,
   SORT,
   SORT_BY,
   TRANSACTION_STATUS,
@@ -94,11 +95,11 @@ export class WalletClient extends AuthClient {
    * @param {TRANSACTION_TYPE[]} [params.transactionTypes] Optional. List of types to query. valid types are: 'DEPOSIT', 'WITHDRAW', 'TRANSFER' and 'SWAP'
    * @param {TRANSACTION_SUBTYPE[]} [params.transactionSubtyes] Optional. List of subtypes to query. valid subtypes are: 'UNCLASSIFIED', 'BLOCKCHAIN', 'AIRDROP', 'AFFILIATE', 'STAKING', 'BUY_CRYPTO', 'OFFCHAIN', 'FIAT', 'SUB_ACCOUNT', 'WALLET_TO_SPOT', 'SPOT_TO_WALLET', 'WALLET_TO_DERIVATIVES', 'DERIVATIVES_TO_WALLET', 'CHAIN_SWITCH_FROM', 'CHAIN_SWITCH_TO' and 'INSTANT_EXCHANGE'
    * @param {TRANSACTION_STATUS[]} [params.transactionStatuses] Optional. List of statuses to query. valid subtypes are: 'CREATED', 'PENDING', 'FAILED', 'SUCCESS' and 'ROLLED_BACK'
-   * @param {string} [params.from] Optional. Interval initial value when ordering by 'createdAt'. As Datetime
-   * @param {string} [params.till] Optional. Interval end value when ordering by 'createdAt'. As Datetime
+   * @param {string} [params.from] Optional. Interval initial value (inclusive). The value type depends on order_by.
+   * @param {string} [params.till] Optional. Interval end value (inclusive). The value type depends on order_by.
    * @param {string} [params.idFrom] Optional. Interval initial value when ordering by id. Min is 0
    * @param {string} [params.idTill] Optional. Interval end value when ordering by id. Min is 0
-   * @param {SORT_BY} [params.orderBy] Optional. sorting parameter.'createdAt' or 'id'. Default is 'createdAt'
+   * @param {ORDER_BY} [params.orderBy] Optional. Defines the sorting type.'CREATED_AT', 'updatedAt', 'last or 'id'. Default is 'createdAt'
    * @param {SORT} [params.sort] Optional. Sort direction. 'ASC' or 'DESC'. Default is 'DESC'
    * @param {number} [params.limit] Optional. Transactions per query. Defaul is 100. Max is 1000
    * @param {number} [params.offset] Optional. Default is 0. Max is 100000
@@ -115,7 +116,7 @@ export class WalletClient extends AuthClient {
     till?: string;
     idFrom?: number;
     idTill?: number;
-    orderBy?: SORT_BY;
+    orderBy?: ORDER_BY;
     sort?: SORT;
     limit?: number;
     offset?: number;

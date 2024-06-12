@@ -16,6 +16,15 @@ export class HMAC {
     this.window = window
   }
 
+  changeWindow(window: number) {
+    this.window = window;
+  }
+
+  changeCredentials(apiKey: string, apiSecret: string) {
+    this.apiKey = apiKey;
+    this.apiSecret = apiSecret;
+  }
+
   /**+
    *
    * @param {URL} url
