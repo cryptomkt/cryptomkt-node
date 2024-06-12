@@ -30,7 +30,7 @@ describe("Rest client test", () => {
   beforeEach(async function () {
     await sleep(second / 20); // make around 20 calls per second at most, to not pass the rate limiting of 30 calls per second, by a big margin.
   });
-  describe.only("Get Currencies", () => {
+  describe("Get Currencies", () => {
     it("All currencies", async function () {
       this.timeout(0);
       let currencies = await client.getCurrencies();

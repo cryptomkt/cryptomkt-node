@@ -184,7 +184,6 @@ describe("wallet management", () => {
     it("eth belongs", async function () {
       this.timeout(0);
       let croAddress = await client.getDepositCryptoAddress("ETH");
-      console.log(croAddress)
       let result = await client.checkIfCryptoAddressBelongsToCurrentAccount(
         croAddress.address
       );
