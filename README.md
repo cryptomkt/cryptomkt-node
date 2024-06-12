@@ -9,7 +9,7 @@
 To install Cryptomarket use npm
 
 ```
-npm install cryptomarket
+npm install cryptomarket@3.2.0
 ```
 
 # Documentation

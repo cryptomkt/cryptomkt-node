@@ -14,4 +14,12 @@ export interface Network {
   lowProcessingTime: string;
   highProcessingTime: string;
   avgProcessingTime: string;
+  code: string;
+  networkName: string;
+  isEnsAvailable: boolean;
+  crypto_paymentIdName: string;
+  cryptoExplorer: string;
+  contractAddress: string;
+  isMultichain: boolean;
+  assetId: Map<string, string>;
 }

@@ -2,7 +2,7 @@ import assert from "assert";
 import "mocha";
 import { CryptomarketAPIException, CryptomarketSDKException } from "../../lib";
 import { Client } from "../../lib/client";
-import { ACCOUNT } from "../../lib/constants";
+import { ACCOUNT, ORDER_BY, SORT } from "../../lib/constants";
 import {
   goodAddress,
   goodAmountLock,
@@ -147,21 +147,51 @@ describe("wallet management", () => {
         { currency: "CRO", amount: "100" },
         { currency: "EOS", amount: "12" }
       ]);
-      fees.forEach(fee => assert(goodFee(fee), "not good address"))
+      fees.forEach(fee => assert(goodFee(fee), "not good fee"))
     });
   });
-  describe("check if crypto address belongs to current account", () => {
-    it("cro belongs", async function () {
+  describe("get bulk estimates withdrawal fees", () => {
+    it("", async function () {
       this.timeout(0);
-      let croAddress = await client.getDepositCryptoAddress("CRO");
+      let fees = await client.getBulkEstimateWithdrawalFees([
+        { currency: "CRO", amount: "100" },
+        { currency: "EOS", amount: "12" }
+      ]);
+      fees.forEach(fee => assert(goodFee(fee), "not good fee"))
+    });
+  });
+  // describe("get estimate deposit fee", () => {
+  //   it("", async function () {
+  //     this.timeout(0);
+  //     let fee = await client.getEstimateDepositFee({
+  //       currency: "CRO",
+  //       amount: "100",
+  //     });
+  //     assert(fee !== "", "not a good fee");
+  //   });
+  // });
+  // describe("get bulk estimates deposit fees", () => {
+  //   it("", async function () {
+  //     this.timeout(0);
+  //     let fees = await client.getBulkEstimateDepositFees([
+  //       { currency: "CRO", amount: "100" },
+  //       { currency: "EOS", amount: "12" }
+  //     ]);
+  //     fees.forEach(fee => assert(goodFee(fee), "not good fee"))
+  //   });
+  // });
+  describe("check if crypto address belongs to current account", () => {
+    it("eth belongs", async function () {
+      this.timeout(0);
+      let croAddress = await client.getDepositCryptoAddress("ETH");
       let result = await client.checkIfCryptoAddressBelongsToCurrentAccount(
         croAddress.address
       );
       assert(result === true, "does not belong");
     });
-    it.skip("eos belongs", async function () {
+    it("btc belongs", async function () {
       this.timeout(0);
-      let eosAddress = await client.getDepositCryptoAddress("EOS");
+      let eosAddress = await client.getDepositCryptoAddress("BTC");
       let result = await client.checkIfCryptoAddressBelongsToCurrentAccount(
         eosAddress.address
       );
@@ -210,6 +240,20 @@ describe("wallet management", () => {
     it("", async function () {
       this.timeout(0);
       let transactions = await client.getTransactionHistory({ currencies: ["CRO", "ETH"] });
+      assert(goodList(goodTransaction, transactions), "not good transaction");
+    });
+  });
+  describe("get transaction history with params", () => {
+    it("", async function () {
+      this.timeout(0);
+      let transactions = await client.getTransactionHistory({
+        currencies: ["CRO", "ETH"],
+        orderBy: ORDER_BY.CREATED_AT,
+        sort: SORT.ASC,
+        limit: 100,
+        offset: 1,
+        from: "1614815872000"
+      });
       assert(goodList(goodTransaction, transactions), "not good transaction");
     });
   });
