@@ -19,6 +19,7 @@ import { HttpClient } from "./httpClient";
 import {
   ACLSettings,
   Address,
+  WhitelistAddress,
   AmountLock,
   Balance,
   Candle,
@@ -1000,6 +1001,19 @@ export class Client {
   }
 
   /**
+   * Gets the list of whitelisted addresses
+   * 
+   * Requires the "Payment information" API key Access Right
+   * 
+   * https://api.exchange.cryptomkt.com/#get-whitelisted-addresses
+   * 
+   * @return the list of white listed addresses
+   */
+  getWhitelistedAddresses(): Promise<WhitelistAddress[]> {
+    return this.get(`wallet/crypto/address/white-list`);
+  }
+
+  /**
    * Get the current addresses of the user
    *
    * Requires the "Payment information" API key AccesrkRight.
@@ -1602,7 +1616,7 @@ Accepted values: wallet, spot. Must not be the same as source
   }
 
   /**
- * Creates and commits a transfer between the user (subaccount) and another
+   * Creates and commits a transfer between the user (subaccount) and another
    * subaccount.
    * 
    * Call is being sent by a subaccount
