@@ -825,6 +825,7 @@ export class Client {
    * @param {string} params.newClientOrderId clientOrderId for the new order.
    * @param {string} params.quantity Order quantity.
    * @param {string} [params.price] Required if order type is limit, stopLimit, or takeProfitLimit. Order price.
+   * @param {string} [params.stopPrice]  Required if order type is stopLimit, stopMarket, takeProfitLimit, or takeProfitMarket. Order price
    * @param {boolean} [params.strictValidate] Optional. Price and quantity will be checked for incrementation within the symbol’s tick size and quantity step. See the symbol's tickSize and quantityIncrement.
    *
    * @returns the new spot order
@@ -835,6 +836,7 @@ export class Client {
       newClientOrderId: string;
       quantity: string;
       price?: string;
+      stop_price?: string;
       strictValidate?: boolean;
     }
   ): Promise<Order> {
