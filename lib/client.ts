@@ -1575,6 +1575,63 @@ Accepted values: wallet, spot. Must not be the same as source
   }
 
   /**
+   * Creates and commits a transfer from a subaccount to its super account
+   * 
+   * Call is being sent by a subaccount
+   * 
+   * Created but not committed transfer will reserve pending amount on the sender
+   * wallet affecting their ability to withdraw or transfer crypto to another
+   * account. Incomplete withdrawals affect subaccount transfers the same way
+   * 
+   * Requires the "Withdraw cryptocurrencies" API key Access Right
+   * 
+   * https://api.exchange.cryptomkt.com/#transfer-to-super-account
+   *
+   * @param {object} params Parameters
+   * @param {number} params.amount the amount of currency to transfer
+   * @param {string} params.currency the currency to transfer
+   *
+   * @return The transaction ID of the tranfer
+   */
+  async transferToSuperAccount(params: {
+    amount: number;
+    currency: string;
+  }): Promise<string> {
+    const response = await this.post("sub-account/transfer/sub-to-super", params);
+    return response["response"];
+  }
+
+  /**
+ * Creates and commits a transfer between the user (subaccount) and another
+   * subaccount.
+   * 
+   * Call is being sent by a subaccount
+   * 
+   * Created but not committed transfer will reserve pending amount on the sender
+   * wallet affecting their ability to withdraw or transfer crypto to another
+   * account. Incomplete withdrawals affect subaccount transfers the same way
+   * 
+   * Requires the "Withdraw cryptocurrencies" API key Access Right
+   * 
+   * https://api.exchange.cryptomkt.com/#transfer-across-subaccounts
+   *
+   * @param {object} params Parameters
+   * @param {number} params.subAccountId The account ID of the account to transfer to
+   * @param {number} params.amount the amount of currency to transfer
+   * @param {string} params.currency the currency to transfer
+   *
+   * @return The transaction ID of the tranfer
+   */
+  async transferToAnotherSubAccount(params: {
+    subAccountId: number;
+    amount: number;
+    currency: string;
+  }): Promise<string> {
+    const response = await this.post("sub-account/transfer/sub-to-sub", params);
+    return response["response"];
+  }
+
+  /**
    * Returns a list of withdrawal settings for sub-accounts listed
    *
    * Requires the "Payment information" API key Access Right
