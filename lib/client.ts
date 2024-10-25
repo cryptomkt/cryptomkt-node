@@ -1197,6 +1197,21 @@ Accepted values: never, optionally, required
     return this.post("wallet/crypto/fee/estimate/bulk", feeRequests);
   }
 
+
+  /**
+   * Gets the hash of withdrawal fees
+   * 
+   * Requires the "Payment information" API key Access Right
+   * 
+   * https://api.exchange.cryptomkt.com/#get-withdrawal-fees-hash
+   *
+   * @return the fees hash
+   */
+  async getWithdrawalFeesHash(): Promise<String[]> {
+    const response = await this.get("wallet/crypto/fee/withdraw/hash");
+    return response['hash'];
+  }
+
   /**
    * Get an estimate of a withdrawal fee
    *
@@ -1220,20 +1235,20 @@ Accepted values: never, optionally, required
     return response["fee"];
   }
 
-//   /**
-//  * Get estimates of deposit fees
-//  *
-//  * Requires the "Payment information" API key Access Right.
-//  *
-//  * https://api.exchange.cryptomkt.com/#bulk-estimate-deposit-fee
-//  *
-//  * @param {FeeRequest[]} feeRequests A list of fee requests
-//  *
-//  * @return The list of requested fees
-//  */
-//   async getBulkEstimateDepositFees(feeRequests: FeeRequest[]): Promise<Fee[]> {
-//     return this.post("wallet/crypto/fee/deposit/estimate/bulk", feeRequests);
-//   }
+  //   /**
+  //  * Get estimates of deposit fees
+  //  *
+  //  * Requires the "Payment information" API key Access Right.
+  //  *
+  //  * https://api.exchange.cryptomkt.com/#bulk-estimate-deposit-fee
+  //  *
+  //  * @param {FeeRequest[]} feeRequests A list of fee requests
+  //  *
+  //  * @return The list of requested fees
+  //  */
+  //   async getBulkEstimateDepositFees(feeRequests: FeeRequest[]): Promise<Fee[]> {
+  //     return this.post("wallet/crypto/fee/deposit/estimate/bulk", feeRequests);
+  //   }
 
   // /**
   //  * Get an estimate of a deposit fee
