@@ -1,7 +1,7 @@
 export interface Address {
   address: string;
   currency: string;
-  paymentId: string;
-  publicKey: string;
-  netwokdCode: string;
+  paymentId?: string;
+  publicKey?: string;
+  networkCode?: string;
 }

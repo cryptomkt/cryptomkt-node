@@ -177,6 +177,7 @@ export class TradingClient extends AuthClient {
    * @param {string} params.newClientOrderId the new client order id for the modified order. must be unique within the trading day
    * @param {string} params.quantity new order quantity
    * @param {string} params.price new order price
+   * @param {string} [params.stopPrice]  Required if order type is stopLimit, stopMarket, takeProfitLimit, or takeProfitMarket. Order price
    * @param {boolean} [params.strictValidate]  price and quantity will be checked for the incrementation with tick size and quantity step. See symbol's tickSize and quantityIncrement
    * @return A promise that resolves with a report of the modified order
    */
@@ -185,6 +186,7 @@ export class TradingClient extends AuthClient {
     newClientOrderId: string;
     quantity: string;
     price: string;
+    stop_price?: string;
     strictValidate?: Boolean;
   }): Promise<Report> {
     const report = await this.makeRequest<Report>({

@@ -1,5 +1,5 @@
 export interface Price {
-  currency: string;
-  price: string;
+  currency?: string;
+  price?: string;
   timestamp: string;
 }

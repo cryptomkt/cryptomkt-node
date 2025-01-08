@@ -26,6 +26,7 @@ export interface Order {
   originalClientOrderId: string;
   orderListId: string;
   contingencyType: CONTINGENCY;
+  priceAverage: string;
 }
 
 export interface OrderRequest {
