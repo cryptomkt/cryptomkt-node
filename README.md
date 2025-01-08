@@ -4,21 +4,21 @@
 
 [sign up in CryptoMarket](https://www.cryptomkt.com/account/register).
 
-# Installation
+## Installation
 
 To install Cryptomarket use npm
 
-```
-npm install cryptomarket@3.2.1
+```bash
+npm install cryptomarket@3.3.0
 ```
 
-# Documentation
+## Documentation
 
 This sdk makes use of the [api version 3](https://api.exchange.cryptomkt.com) of cryptomarket.
 
-# Quick Start
+## Quick Start
 
-## rest client
+### Rest client
 
 ```typescript
 const { Client } = require("cryptomarket");
@@ -60,7 +60,7 @@ const newOrder = await client.createOrder({
 });
 ```
 
-## websocket client
+### Websocket client
 
 There are three websocket clients, the market data client, the spot trading client and the wallet client.
 The market data client requires no authentication, while the spot trading client and the wallet client do require it.
@@ -70,7 +70,7 @@ All websocket methods return promises. Subscriptions also take in a function of 
 The documentation of a specific subscriptions explains with of this types of
 notification uses.
 
-### MarketDataClient
+#### MarketDataClient
 
 Example of use of the market data client
 
@@ -102,7 +102,7 @@ await marketDataClient.subscribeToPartialOrderBook(
 
 ```
 
-### SpotTradingClient
+#### SpotTradingClient
 
 Example of use of the spot trading client
 
@@ -133,7 +133,7 @@ const report = await tradingClient.createSpotOrder({
 console.log(report);
 ```
 
-### WalletClient
+#### WalletClient
 
 Example of use of the wallet client
 
@@ -157,7 +157,7 @@ await walletClient.subscribeToTransactions((notification, type) => {
 });
 ```
 
-## error handling
+### Error handling
 
 ```typescript
 
@@ -187,11 +187,11 @@ try {
 }
 ```
 
-# Constants
+## Constants
 
 All constants used for calls are in the `constants` module.
 
-# Checkout our other SDKs
+## Checkout our other SDKs
 
 [python sdk](https://github.com/cryptomkt/cryptomkt-python)
 
