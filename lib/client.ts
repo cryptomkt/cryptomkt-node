@@ -19,6 +19,7 @@ import { HttpClient } from "./httpClient";
 import {
   ACLSettings,
   Address,
+  WhitelistAddress,
   AmountLock,
   Balance,
   Candle,
@@ -824,6 +825,7 @@ export class Client {
    * @param {string} params.newClientOrderId clientOrderId for the new order.
    * @param {string} params.quantity Order quantity.
    * @param {string} [params.price] Required if order type is limit, stopLimit, or takeProfitLimit. Order price.
+   * @param {string} [params.stopPrice]  Required if order type is stopLimit, stopMarket, takeProfitLimit, or takeProfitMarket. Order price
    * @param {boolean} [params.strictValidate] Optional. Price and quantity will be checked for incrementation within the symbol’s tick size and quantity step. See the symbol's tickSize and quantityIncrement.
    *
    * @returns the new spot order
@@ -834,6 +836,7 @@ export class Client {
       newClientOrderId: string;
       quantity: string;
       price?: string;
+      stop_price?: string;
       strictValidate?: boolean;
     }
   ): Promise<Order> {
@@ -997,6 +1000,19 @@ export class Client {
     let balance = await this.get(`wallet/balance/${currency}`);
     balance.currency = currency;
     return balance;
+  }
+
+  /**
+   * Gets the list of whitelisted addresses
+   * 
+   * Requires the "Payment information" API key Access Right
+   * 
+   * https://api.exchange.cryptomkt.com/#get-whitelisted-addresses
+   * 
+   * @return the list of white listed addresses
+   */
+  getWhitelistedAddresses(): Promise<WhitelistAddress[]> {
+    return this.get(`wallet/crypto/address/white-list`);
   }
 
   /**
@@ -1197,6 +1213,21 @@ Accepted values: never, optionally, required
     return this.post("wallet/crypto/fee/estimate/bulk", feeRequests);
   }
 
+
+  /**
+   * Gets the hash of withdrawal fees
+   * 
+   * Requires the "Payment information" API key Access Right
+   * 
+   * https://api.exchange.cryptomkt.com/#get-withdrawal-fees-hash
+   *
+   * @return the fees hash
+   */
+  async getWithdrawalFeesHash(): Promise<String[]> {
+    const response = await this.get("wallet/crypto/fee/withdraw/hash");
+    return response['hash'];
+  }
+
   /**
    * Get an estimate of a withdrawal fee
    *
@@ -1220,20 +1251,20 @@ Accepted values: never, optionally, required
     return response["fee"];
   }
 
-//   /**
-//  * Get estimates of deposit fees
-//  *
-//  * Requires the "Payment information" API key Access Right.
-//  *
-//  * https://api.exchange.cryptomkt.com/#bulk-estimate-deposit-fee
-//  *
-//  * @param {FeeRequest[]} feeRequests A list of fee requests
-//  *
-//  * @return The list of requested fees
-//  */
-//   async getBulkEstimateDepositFees(feeRequests: FeeRequest[]): Promise<Fee[]> {
-//     return this.post("wallet/crypto/fee/deposit/estimate/bulk", feeRequests);
-//   }
+  //   /**
+  //  * Get estimates of deposit fees
+  //  *
+  //  * Requires the "Payment information" API key Access Right.
+  //  *
+  //  * https://api.exchange.cryptomkt.com/#bulk-estimate-deposit-fee
+  //  *
+  //  * @param {FeeRequest[]} feeRequests A list of fee requests
+  //  *
+  //  * @return The list of requested fees
+  //  */
+  //   async getBulkEstimateDepositFees(feeRequests: FeeRequest[]): Promise<Fee[]> {
+  //     return this.post("wallet/crypto/fee/deposit/estimate/bulk", feeRequests);
+  //   }
 
   // /**
   //  * Get an estimate of a deposit fee
@@ -1556,6 +1587,63 @@ Accepted values: wallet, spot. Must not be the same as source
     type: TRANSFER_TYPE;
   }): Promise<string> {
     const response = await this.post("sub-account/transfer", params);
+    return response["response"];
+  }
+
+  /**
+   * Creates and commits a transfer from a subaccount to its super account
+   * 
+   * Call is being sent by a subaccount
+   * 
+   * Created but not committed transfer will reserve pending amount on the sender
+   * wallet affecting their ability to withdraw or transfer crypto to another
+   * account. Incomplete withdrawals affect subaccount transfers the same way
+   * 
+   * Requires the "Withdraw cryptocurrencies" API key Access Right
+   * 
+   * https://api.exchange.cryptomkt.com/#transfer-to-super-account
+   *
+   * @param {object} params Parameters
+   * @param {number} params.amount the amount of currency to transfer
+   * @param {string} params.currency the currency to transfer
+   *
+   * @return The transaction ID of the tranfer
+   */
+  async transferToSuperAccount(params: {
+    amount: number;
+    currency: string;
+  }): Promise<string> {
+    const response = await this.post("sub-account/transfer/sub-to-super", params);
+    return response["response"];
+  }
+
+  /**
+   * Creates and commits a transfer between the user (subaccount) and another
+   * subaccount.
+   * 
+   * Call is being sent by a subaccount
+   * 
+   * Created but not committed transfer will reserve pending amount on the sender
+   * wallet affecting their ability to withdraw or transfer crypto to another
+   * account. Incomplete withdrawals affect subaccount transfers the same way
+   * 
+   * Requires the "Withdraw cryptocurrencies" API key Access Right
+   * 
+   * https://api.exchange.cryptomkt.com/#transfer-across-subaccounts
+   *
+   * @param {object} params Parameters
+   * @param {number} params.subAccountId The account ID of the account to transfer to
+   * @param {number} params.amount the amount of currency to transfer
+   * @param {string} params.currency the currency to transfer
+   *
+   * @return The transaction ID of the tranfer
+   */
+  async transferToAnotherSubAccount(params: {
+    subAccountId: number;
+    amount: number;
+    currency: string;
+  }): Promise<string> {
+    const response = await this.post("sub-account/transfer/sub-to-sub", params);
     return response["response"];
   }
 
